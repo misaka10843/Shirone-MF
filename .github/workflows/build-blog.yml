@@ -1,0 +1,92 @@
+name: Build personal blog
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'docs/**'
+      - 'rules/**'
+      - 'README*.md'
+  workflow_dispatch:
+    inputs:
+      content_ref:
+        description: Content commit or ref
+        default: main
+        required: false
+      deploy:
+        description: Deploy the built site to Vercel production
+        type: boolean
+        default: false
+  repository_dispatch:
+    types: [content-updated]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: personal-blog-build
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CONTENT_DIR: .content-src
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Resolve content version
+        id: content
+        env:
+          PAYLOAD_SHA: ${{ github.event.client_payload.sha }}
+          INPUT_REF: ${{ inputs.content_ref }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          ref="${PAYLOAD_SHA:-${INPUT_REF:-main}}"
+          if [[ ! "$ref" =~ ^[a-zA-Z0-9._/-]+$ ]]; then
+            echo 'Invalid content ref' >&2
+            exit 1
+          fi
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: misaka10843/blog-content
+          ref: ${{ steps.content.outputs.ref }}
+          path: .content-src
+          token: ${{ secrets.CONTENT_REPO_TOKEN || github.token }}
+          persist-credentials: false
+      - uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda
+        with:
+          run_install: false
+      - uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e
+        with:
+          node-version: 26.13.0
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm content:validate
+      - run: pnpm content:sync
+      - run: pnpm exec astro check
+      - run: pnpm build
+      - name: Upload static site
+        uses: actions/upload-artifact@v4
+        with:
+          name: misaka-home
+          path: dist/
+          retention-days: 7
+      - name: Record content version
+        run: git -C .content-src rev-parse HEAD >> "$GITHUB_STEP_SUMMARY"
+      - name: Prepare Vercel static output
+        run: node scripts/deploy/prepare-vercel.mjs
+      - name: Deploy to Vercel
+        if: ${{ vars.VERCEL_DEPLOY_ENABLED == 'true' || inputs.deploy == true }}
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          set -euo pipefail
+          : "${VERCEL_TOKEN:?Configure VERCEL_TOKEN}"
+          : "${VERCEL_ORG_ID:?Configure VERCEL_ORG_ID}"
+          : "${VERCEL_PROJECT_ID:?Configure VERCEL_PROJECT_ID}"
+          pnpm dlx vercel@65.12.1 deploy --prebuilt --prod --yes --token "$VERCEL_TOKEN"
