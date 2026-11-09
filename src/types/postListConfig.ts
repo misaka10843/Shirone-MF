@@ -21,4 +21,6 @@ export interface PostListConfig {
 	/** 首页每页文章数 */
 	pageSize: number;
 	layout: PostListLayoutConfig;
+	/** Optional decorative cover behind the list-card body; omitted means off. */
+	backdrop?: { enable: boolean; fallbackImages: string[] };
 }

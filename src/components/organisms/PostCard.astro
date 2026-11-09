@@ -14,6 +14,9 @@ import { formatDateToYYYYMMDD } from "@utils/date-utils";
 import { isEncryptedPost } from "@utils/post-encryption";
 import { getProjectImageLoader } from "@utils/project-images";
 import { getCategoryUrl, getDir, getTagUrl } from "@utils/url-utils";
+import { selectPostBackdrop } from "@utils/post-card-backdrop";
+import { resolveAsset } from "@utils/asset-utils";
+import { postListConfig } from "@/config/postListConfig";
 
 interface Props {
 	class?: string;
@@ -118,6 +121,8 @@ if (image) {
 const categoryLink = category
 	? { name: category, href: getCategoryUrl(category) }
 	: null;
+const selectedBackdrop = selectPostBackdrop(entry.id, coverUrl, postListConfig.backdrop);
+const backdrop = selectedBackdrop ? await resolveAsset(selectedBackdrop) : "";
 const tagLinks = tags.map((t) => ({ name: t.trim(), href: getTagUrl(t) }));
 
 const isEncrypted = isEncryptedPost(entry.data);
@@ -139,6 +144,7 @@ const excerpt =
 	title={title}
 	description={excerpt}
 	image={coverUrl}
+	backdrop={backdrop}
 	imageSrcset={coverSrcset}
 	imageAvifSrcset={coverAvifSrcset}
 	imageSizes="(max-width: 767px) calc(100vw - 4rem), (min-width: 1280px) 342px, 28vw"

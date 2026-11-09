@@ -19,6 +19,8 @@ interface Props {
 	description?: string;
 	/** 封面图地址（省略则无封面，右侧显示进入箭头按钮） */
 	image?: string;
+	/** Decorative body background, resolved by the owning organism. */
+	backdrop?: string;
 	imageSrcset?: string;
 	imageAvifSrcset?: string;
 	imageSizes?: string;
@@ -42,6 +44,7 @@ const {
 	title,
 	description,
 	image,
+	backdrop,
 	imageSrcset,
 	imageAvifSrcset,
 	imageSizes,
@@ -76,6 +79,7 @@ const titleLabel =
 	style={style}
 >
 	<div class="m3-blog-postcard__body">
+			{backdrop && <img class="m3-blog-postcard__backdrop" src={backdrop} alt="" aria-hidden="true" width="480" height="320" loading="lazy" decoding="async" />}
 		<a
 			class="m3-blog-postcard__title"
 			href={href}
@@ -174,11 +178,15 @@ const titleLabel =
 	color: var(--on-surface)
 
 	&__body
+			position: relative
+			isolation: isolate
+			overflow: hidden
 		flex: 1
 		min-width: 0
 		padding: 1.5rem 1.5rem 1.25rem
 
 	&__title
+			/* Typography remains on the normal card surface. */
 		display: flex
 		align-items: center
 		gap: 0.5rem
