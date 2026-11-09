@@ -1,0 +1,6 @@
+{
+  "schemaVersion": 1,
+  "source": { "type": "git", "url": "https://github.com/misaka10843/blog-content.git", "ref": "main" },
+  "keep": ["src/assets/fonts/Yozai-Medium.ttf"],
+  "prune": true
+}

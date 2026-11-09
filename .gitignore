@@ -77,3 +77,23 @@ artifacts/lighthouse/*
 
 # generated AI skills plugin packages
 artifacts/shirone-ai-*
+
+# Personal content is materialized from blog-content
+.env.local
+/src/content/
+/src/data/*.ts
+/src/user/user-config.ts
+/src/assets/fonts/personal/
+/public/assets/image/
+/public/favicon.ico
+/public/assets/audio/
+/public/assets/music/
+/public/assets/projects/
+/public/assets/anime/*.webp
+/public/images/
+/public/archives/
+/public/link/
+/public/bangumis/
+/public/categories/
+/public/tags/
+/artifacts/migration/
