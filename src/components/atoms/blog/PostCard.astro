@@ -178,15 +178,28 @@ const titleLabel =
 	color: var(--on-surface)
 
 	&__body
-			position: relative
-			isolation: isolate
-			overflow: hidden
+		position: relative
+		isolation: isolate
+		overflow: hidden
 		flex: 1
 		min-width: 0
 		padding: 1.5rem 1.5rem 1.25rem
 
+	&__backdrop
+		position: absolute
+		inset-block: -1rem
+		right: -1rem
+		width: 70%
+		height: calc(100% + 2rem)
+		object-fit: cover
+		z-index: -1
+		pointer-events: none
+		opacity: 0.18
+		filter: blur(0.75rem)
+		/* Black defines mask alpha only; it is not a surface color. */
+		mask-image: linear-gradient(to left, #000, transparent)
+
 	&__title
-			/* Typography remains on the normal card surface. */
 		display: flex
 		align-items: center
 		gap: 0.5rem
