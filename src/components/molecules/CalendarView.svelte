@@ -12,6 +12,7 @@ import { i18n } from "@i18n/translation";
 import type { CalendarPost } from "@utils/calendar-data";
 import { createGregorianDateFormatter } from "@utils/locale-utils";
 import { collapse, reveal } from "@utils/motion";
+import type { Snippet } from "svelte";
 
 interface Props {
 	/** BCP47 locale（由 siteConfig.lang 换算，Intl 用） */
@@ -24,6 +25,8 @@ interface Props {
 	backTodayLabel: string;
 	prevMonthLabel: string;
 	nextMonthLabel: string;
+	/** Optional calendar extension, synchronized with the displayed year. */
+	children?: Snippet<[number]>;
 }
 
 let {
@@ -34,6 +37,7 @@ let {
 	backTodayLabel,
 	prevMonthLabel,
 	nextMonthLabel,
+	children,
 }: Props = $props();
 
 const today = new Date();
@@ -237,6 +241,7 @@ function toggleDay(cell: DayCell) {
 			{/each}
 		</ul>
 	</div>
+	{@render children?.(year)}
 </div>
 
 <style lang="stylus">

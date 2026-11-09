@@ -124,6 +124,8 @@ export interface CalendarWidget {
 	pages?: SidebarPage[];
 	/** 周起始日，默认 mon（周一） */
 	startOfWeek?: "mon" | "sun";
+	/** Show a year of real publication activity below the calendar; default false. */
+	showHeatmap?: boolean;
 }
 
 /** 文章目录（仅文章详情页显示） */

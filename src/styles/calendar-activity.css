@@ -1,0 +1,11 @@
+.calendar-activity { margin: .75rem 0 0; padding-top: .75rem; border-top: 1px solid var(--outline-variant); }
+.calendar-activity figcaption { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .25rem; margin-bottom: .75rem; font: var(--m3e-type-label-medium); color: var(--on-surface-variant); }
+.calendar-activity__months { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: .2rem; }
+.calendar-activity__column { display: grid; gap: .2rem; min-width: 0; }
+.calendar-activity__month { text-align: center; font: var(--m3e-type-label-small); color: var(--on-surface-variant); }
+.calendar-activity__cell { display: block; aspect-ratio: 1; border-radius: var(--shape-corner-xs); background: var(--surface-container-highest); }
+.calendar-activity__cell[data-level="1"] { background: color-mix(in oklab, var(--primary) 25%, var(--surface-container)); }
+.calendar-activity__cell[data-level="2"] { background: color-mix(in oklab, var(--primary) 45%, var(--surface-container)); }
+.calendar-activity__cell[data-level="3"] { background: color-mix(in oklab, var(--primary) 70%, var(--surface-container)); }
+.calendar-activity__cell[data-level="4"] { background: var(--primary); }
+.calendar-activity__cell[data-empty="true"] { visibility: hidden; }

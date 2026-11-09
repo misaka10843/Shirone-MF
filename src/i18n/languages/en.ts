@@ -212,6 +212,10 @@ export const en: Translation = {
 	[Key.calendarBackToday]: "Back to today",
 	[Key.calendarPrevMonth]: "Previous month",
 	[Key.calendarNextMonth]: "Next month",
+	[Key.calendarActivity]: "Publication activity",
+	[Key.calendarActivitySummary]: "{year} · {count} posts",
+	[Key.calendarActivityPeriod]: "{month}, days {start}–{end}: {count} posts",
+	[Key.calendarActivityMonth]: "{month}: {count} posts",
 
 	[Key.mermaidControls]: "Diagram controls",
 	[Key.mermaidZoomIn]: "Zoom in",

@@ -213,6 +213,10 @@ export const vi: Translation = {
 	[Key.calendarBackToday]: "Về hôm nay",
 	[Key.calendarPrevMonth]: "Tháng trước",
 	[Key.calendarNextMonth]: "Tháng sau",
+	[Key.calendarActivity]: "Hoạt động đăng bài",
+	[Key.calendarActivitySummary]: "{year} · {count} bài viết",
+	[Key.calendarActivityPeriod]: "{month}, ngày {start}–{end}: {count} bài viết",
+	[Key.calendarActivityMonth]: "{month}: {count} bài viết",
 
 	[Key.mermaidControls]: "Điều khiển sơ đồ",
 	[Key.mermaidZoomIn]: "Phóng to",

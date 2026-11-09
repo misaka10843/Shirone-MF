@@ -92,6 +92,12 @@ interface SidebarWidgetBase {
 - **渲染**：`CalendarView.svelte`（`client:visible` 水合岛）；
 - **页面范围**：全页面通用。
 
+可在 calendar 条目上设置 `showHeatmap: true`，在月历下显示所选年份的发表热力图；省略或 false 时维持原有月历，不挂载热力图组件及其样式。每列为一个月，五行分别对应 1–7、8–14、15–21、22–28、29–月末；无效日期留空。颜色仅基于真实、已纳入日历的文章数量，不发起网络请求。日历切换年份时同步更新，读屏标签提供全年与逐月计数。
+
+```ts
+{ type: "calendar", enable: true, slot: "top", column: "secondary", showHeatmap: true }
+```
+
 ---
 
 ## 8. MusicSidebar — 侧栏音乐播放器

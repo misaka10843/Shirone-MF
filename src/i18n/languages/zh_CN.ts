@@ -203,6 +203,10 @@ export const zh_CN: Translation = {
 	[Key.calendarBackToday]: "回到今天",
 	[Key.calendarPrevMonth]: "上一月",
 	[Key.calendarNextMonth]: "下一月",
+	[Key.calendarActivity]: "发表热力图",
+	[Key.calendarActivitySummary]: "{year} 年 · {count} 篇",
+	[Key.calendarActivityPeriod]: "{month} {start}–{end} 日：{count} 篇文章",
+	[Key.calendarActivityMonth]: "{month}：{count} 篇文章",
 
 	[Key.mermaidControls]: "图表控件",
 	[Key.mermaidZoomIn]: "放大",

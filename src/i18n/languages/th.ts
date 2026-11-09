@@ -202,6 +202,10 @@ export const th: Translation = {
 	[Key.calendarBackToday]: "กลับไปวันนี้",
 	[Key.calendarPrevMonth]: "เดือนก่อน",
 	[Key.calendarNextMonth]: "เดือนถัดไป",
+	[Key.calendarActivity]: "กิจกรรมการเผยแพร่",
+	[Key.calendarActivitySummary]: "{year} · {count} บทความ",
+	[Key.calendarActivityPeriod]: "{month} วันที่ {start}–{end}: {count} บทความ",
+	[Key.calendarActivityMonth]: "{month}: {count} บทความ",
 
 	[Key.mermaidControls]: "ตัวควบคุมแผนภาพ",
 	[Key.mermaidZoomIn]: "ขยาย",

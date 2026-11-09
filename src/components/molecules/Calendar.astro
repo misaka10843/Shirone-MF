@@ -11,6 +11,7 @@ import type { CalendarWidget } from "@/types/sidebarConfig";
  * 容器外，不从 API 端点拉取；日期口径与文章卡片一致（date-utils）。
  */
 import CalendarView from "./CalendarView.svelte";
+import CalendarWithActivity from "./CalendarWithActivity.svelte";
 import WidgetLayout from "./WidgetLayout.astro";
 
 interface Props {
@@ -28,17 +29,18 @@ const startOfWeek = Astro.props.widget?.startOfWeek ?? "mon";
 const locale = siteConfig.lang.replace("_", "-");
 
 const { postsByDate, activeMonths } = await getCalendarData();
+const showHeatmap = Astro.props.widget?.showHeatmap ?? false;
+const calendarProps = {
+	locale,
+	startOfWeek,
+	postsByDate,
+	activeMonths,
+	backTodayLabel: i18n(I18nKey.calendarBackToday),
+	prevMonthLabel: i18n(I18nKey.calendarPrevMonth),
+	nextMonthLabel: i18n(I18nKey.calendarNextMonth),
+};
 ---
 
 <WidgetLayout name={i18n(I18nKey.calendar)} id="calendar" class={className} style={style}>
-	<CalendarView
-		client:visible
-		{locale}
-		{startOfWeek}
-		{postsByDate}
-		{activeMonths}
-		backTodayLabel={i18n(I18nKey.calendarBackToday)}
-		prevMonthLabel={i18n(I18nKey.calendarPrevMonth)}
-		nextMonthLabel={i18n(I18nKey.calendarNextMonth)}
-	/>
+	{showHeatmap ? <CalendarWithActivity client:visible {...calendarProps} /> : <CalendarView client:visible {...calendarProps} />}
 </WidgetLayout>

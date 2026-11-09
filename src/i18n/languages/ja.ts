@@ -210,6 +210,10 @@ export const ja: Translation = {
 	[Key.calendarBackToday]: "今日に戻る",
 	[Key.calendarPrevMonth]: "前の月",
 	[Key.calendarNextMonth]: "次の月",
+	[Key.calendarActivity]: "投稿ヒートマップ",
+	[Key.calendarActivitySummary]: "{year} 年 · {count} 件",
+	[Key.calendarActivityPeriod]: "{month} {start}～{end} 日：{count} 件",
+	[Key.calendarActivityMonth]: "{month}：{count} 件",
 
 	[Key.mermaidControls]: "図のコントロール",
 	[Key.mermaidZoomIn]: "拡大",

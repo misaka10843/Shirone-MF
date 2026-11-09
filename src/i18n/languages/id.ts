@@ -215,6 +215,11 @@ export const id: Translation = {
 	[Key.calendarBackToday]: "Kembali ke hari ini",
 	[Key.calendarPrevMonth]: "Bulan sebelumnya",
 	[Key.calendarNextMonth]: "Bulan berikutnya",
+	[Key.calendarActivity]: "Aktivitas publikasi",
+	[Key.calendarActivitySummary]: "{year} · {count} artikel",
+	[Key.calendarActivityPeriod]:
+		"{month}, tanggal {start}–{end}: {count} artikel",
+	[Key.calendarActivityMonth]: "{month}: {count} artikel",
 
 	[Key.mermaidControls]: "Kontrol diagram",
 	[Key.mermaidZoomIn]: "Perbesar",

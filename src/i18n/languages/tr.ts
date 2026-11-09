@@ -213,6 +213,10 @@ export const tr: Translation = {
 	[Key.calendarBackToday]: "Bugüne dön",
 	[Key.calendarPrevMonth]: "Önceki ay",
 	[Key.calendarNextMonth]: "Sonraki ay",
+	[Key.calendarActivity]: "Yayın etkinliği",
+	[Key.calendarActivitySummary]: "{year} · {count} yazı",
+	[Key.calendarActivityPeriod]: "{month}, {start}–{end}. günler: {count} yazı",
+	[Key.calendarActivityMonth]: "{month}: {count} yazı",
 
 	[Key.mermaidControls]: "Diyagram denetimleri",
 	[Key.mermaidZoomIn]: "Yakınlaştır",

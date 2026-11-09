@@ -210,6 +210,10 @@ export const ko: Translation = {
 	[Key.calendarBackToday]: "오늘로 돌아가기",
 	[Key.calendarPrevMonth]: "이전 달",
 	[Key.calendarNextMonth]: "다음 달",
+	[Key.calendarActivity]: "게시 활동",
+	[Key.calendarActivitySummary]: "{year}년 · 게시물 {count}개",
+	[Key.calendarActivityPeriod]: "{month} {start}–{end}일: 게시물 {count}개",
+	[Key.calendarActivityMonth]: "{month}: 게시물 {count}개",
 
 	[Key.mermaidControls]: "다이어그램 컨트롤",
 	[Key.mermaidZoomIn]: "확대",

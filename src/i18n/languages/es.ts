@@ -213,6 +213,11 @@ export const es: Translation = {
 	[Key.calendarBackToday]: "Volver a hoy",
 	[Key.calendarPrevMonth]: "Mes anterior",
 	[Key.calendarNextMonth]: "Mes siguiente",
+	[Key.calendarActivity]: "Actividad de publicación",
+	[Key.calendarActivitySummary]: "{year} · {count} artículos",
+	[Key.calendarActivityPeriod]:
+		"{month}, días {start}–{end}: {count} artículos",
+	[Key.calendarActivityMonth]: "{month}: {count} artículos",
 
 	[Key.mermaidControls]: "Controles del diagrama",
 	[Key.mermaidZoomIn]: "Acercar",

@@ -202,6 +202,10 @@ enum I18nKey {
 	calendarBackToday = "calendarBackToday",
 	calendarPrevMonth = "calendarPrevMonth",
 	calendarNextMonth = "calendarNextMonth",
+	calendarActivity = "calendarActivity",
+	calendarActivitySummary = "calendarActivitySummary",
+	calendarActivityPeriod = "calendarActivityPeriod",
+	calendarActivityMonth = "calendarActivityMonth",
 
 	mermaidControls = "mermaidControls",
 	mermaidZoomIn = "mermaidZoomIn",
