@@ -1,6 +1,7 @@
 import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
+import { aboutProfileSchema } from "./utils/about-profile-schema";
 
 const postsCollection = defineCollection({
 	loader: glob({ base: "./src/content/posts", pattern: "**/*.{md,mdx}" }),
@@ -76,7 +77,7 @@ const postsCollection = defineCollection({
 
 const specCollection = defineCollection({
 	loader: glob({ base: "./src/content/spec", pattern: "**/*.{md,mdx}" }),
-	schema: z.object({}),
+	schema: z.object({ profile: aboutProfileSchema.optional() }),
 });
 
 /**

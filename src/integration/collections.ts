@@ -1,6 +1,7 @@
 import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
+import { aboutProfileSchema } from "../utils/about-profile-schema";
 
 /**
  * Post schema — used by both source repo (inline) and package mode users
@@ -96,7 +97,9 @@ export const momentSchema: z.ZodType = z.object({
 });
 
 /** Schema for free-form spec pages (currently just `about.md`). */
-export const specSchema: z.ZodType = z.object({});
+export const specSchema: z.ZodType = z.object({
+	profile: aboutProfileSchema.optional(),
+});
 
 /**
  * Schema for series entities. Each entry is one series; the Markdown body is
