@@ -8,6 +8,8 @@
  */
 
 export { aboutConfig } from "./aboutConfig";
+export { guestbookConfig } from "./guestbookConfig";
+export { sponsorConfig } from "./sponsorConfig";
 export { albumsConfig } from "./albumsConfig";
 export {
 	animeConfig,

@@ -2,7 +2,11 @@ import Key from "../i18nKey-runtime.mjs";
 import type { Translation } from "../translation.ts";
 
 export const th: Translation = {
+	[Key.friendApplicationCopy]: "คัดลอก {label}",
+	[Key.projectDetails]: "รายละเอียด",
 	[Key.home]: "หน้าแรก",
+	[Key.guestbook]: "สมุดเยี่ยม",
+	[Key.sponsor]: "สนับสนุน",
 	[Key.about]: "เกี่ยวกับ",
 	[Key.archive]: "คลัง",
 	[Key.archiveGroup]: "จัดกลุ่มคลัง",

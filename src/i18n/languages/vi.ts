@@ -2,7 +2,11 @@ import Key from "../i18nKey-runtime.mjs";
 import type { Translation } from "../translation.ts";
 
 export const vi: Translation = {
+	[Key.friendApplicationCopy]: "Sao chép {label}",
+	[Key.projectDetails]: "Chi tiết",
 	[Key.home]: "Trang chủ",
+	[Key.guestbook]: "Sổ lưu bút",
+	[Key.sponsor]: "Ủng hộ",
 	[Key.about]: "Giới thiệu",
 	[Key.archive]: "Kho bài",
 	[Key.archiveGroup]: "Nhóm kho bài",

@@ -2,7 +2,11 @@ import Key from "../i18nKey-runtime.mjs";
 import type { Translation } from "../translation.ts";
 
 export const zh_CN: Translation = {
+	[Key.friendApplicationCopy]: "复制{label}",
+	[Key.projectDetails]: "查看详情",
 	[Key.home]: "主页",
+	[Key.guestbook]: "留言板",
+	[Key.sponsor]: "赞助支持",
 	[Key.about]: "关于",
 	[Key.archive]: "归档",
 	[Key.archiveGroup]: "归档分组",

@@ -1,4 +1,6 @@
 import { aboutConfig } from "./aboutConfig.ts";
+import { guestbookConfig } from "./guestbookConfig.ts";
+import { sponsorConfig } from "./sponsorConfig.ts";
 import { albumsConfig } from "./albumsConfig.ts";
 import { animeConfig } from "./animeConfig.ts";
 import { compassConfig } from "./compassConfig.ts";
@@ -14,6 +16,8 @@ import { timelineConfig } from "./timelineConfig.ts";
 /** 获取所有被配置 enable: false 关闭的页面标识清单 */
 export function getDisabledPages(): string[] {
 	const disabled: string[] = [];
+	if (!guestbookConfig.enable) disabled.push("guestbook");
+	if (!sponsorConfig.enable) disabled.push("sponsor");
 	if (skillsConfig.enable === false) disabled.push("skills");
 	if (projectsConfig.enable === false) disabled.push("projects");
 	if (timelineConfig.enable === false) disabled.push("timeline");

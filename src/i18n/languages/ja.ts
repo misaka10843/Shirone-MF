@@ -2,7 +2,11 @@ import Key from "../i18nKey-runtime.mjs";
 import type { Translation } from "../translation.ts";
 
 export const ja: Translation = {
+	[Key.friendApplicationCopy]: "{label}をコピー",
+	[Key.projectDetails]: "詳細",
 	[Key.home]: "Home",
+	[Key.guestbook]: "ゲストブック",
+	[Key.sponsor]: "支援",
 	[Key.about]: "About",
 	[Key.archive]: "Archive",
 	[Key.archiveGroup]: "アーカイブのグループ化",

@@ -30,6 +30,8 @@ export const GENERATED_CONFIG_FILE = "src/user/user-config.ts";
 
 /** @type {readonly ConfigDomain[]} */
 export const CONFIG_DOMAINS = Object.freeze([
+	{ key: "guestbook", file: "guestbook", type: "GuestbookConfig", module: "@/types/communityConfig" },
+	{ key: "sponsor", file: "sponsor", type: "SponsorConfig", module: "@/types/communityConfig" },
 	{ key: "site", file: "site", type: "SiteConfig", module: "@/types/config" },
 	{
 		key: "permalink",

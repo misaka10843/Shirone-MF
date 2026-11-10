@@ -1,5 +1,7 @@
 enum I18nKey {
 	home = "home",
+	guestbook = "guestbook",
+	sponsor = "sponsor",
 	notFound = "notFound",
 	notFoundTitle = "notFoundTitle",
 	notFoundDescription = "notFoundDescription",
@@ -307,6 +309,8 @@ enum I18nKey {
 	randomReading = "randomReading",
 	randomReadingSubtitle = "randomReadingSubtitle",
 
+	friendApplicationCopy = "friendApplicationCopy",
+	projectDetails = "projectDetails",
 	copySuccess = "copySuccess",
 	copyLink = "copyLink",
 	copySelection = "copySelection",

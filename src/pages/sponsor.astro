@@ -1,0 +1,28 @@
+---
+import { getEntry, render } from "astro:content";
+import Card from "@components/atoms/display/Card.svelte";
+import Markdown from "@components/content/Markdown.astro";
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+import I18nKey from "@i18n/i18nKey";
+import { sponsorConfig } from "@/config/sponsorConfig";
+import { resolveI18nText } from "@utils/i18n-utils";
+if (!sponsorConfig.enable) return Astro.redirect("/404/");
+const title = resolveI18nText(sponsorConfig.title, I18nKey.sponsor);
+const entry = await getEntry("spec", "sponsor");
+const rendered = entry ? await render(entry) : null;
+const Content = rendered?.Content;
+---
+<MainGridLayout title={title} description={sponsorConfig.description} page="sponsor">
+    {Content && <Card color="var(--card-bg)" radius="l" class="p-6 mb-4"><Markdown class=""><Content /></Markdown></Card>}
+    <div class="grid gap-4 sm:grid-cols-2">
+        {entry?.data.payments?.map(payment => <Card color="var(--card-bg)" radius="l" class="p-6">
+            <h2 class="text-xl font-bold mb-4">{payment.name}</h2>
+            {payment.image && <img src={payment.image} alt={payment.name} width="240" height="240" loading="lazy" class="max-w-full mx-auto rounded-[var(--shape-corner-m)]" />}
+            {payment.url && <a class="text-[var(--primary)] underline" href={payment.url} rel="noopener noreferrer">{payment.name}</a>}
+        </Card>)}
+    </div>
+    {!!entry?.data.supporters?.length && <Card color="var(--card-bg)" radius="l" class="p-6 mt-4">
+        {entry.data.supportersTitle && <h2 class="text-xl font-bold mb-4">{entry.data.supportersTitle}</h2>}
+        <ul>{entry.data.supporters.map(person => <li class="py-2">{person.name}{person.note && <span class="ml-3 text-[var(--on-surface-variant)]">{person.note}</span>}</li>)}</ul>
+    </Card>}
+</MainGridLayout>

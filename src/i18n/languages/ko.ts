@@ -2,7 +2,11 @@ import Key from "../i18nKey-runtime.mjs";
 import type { Translation } from "../translation.ts";
 
 export const ko: Translation = {
+	[Key.friendApplicationCopy]: "{label} 복사",
+	[Key.projectDetails]: "자세히 보기",
 	[Key.home]: "홈",
+	[Key.guestbook]: "방명록",
+	[Key.sponsor]: "후원",
 	[Key.about]: "소개",
 	[Key.archive]: "아카이브",
 	[Key.archiveGroup]: "아카이브 그룹 기준",

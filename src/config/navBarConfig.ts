@@ -1,6 +1,8 @@
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import { aboutConfig } from "@/config/aboutConfig";
+import { guestbookConfig } from "@/config/guestbookConfig";
+import { sponsorConfig } from "@/config/sponsorConfig";
 import { albumsConfig } from "@/config/albumsConfig";
 import { animeConfig } from "@/config/animeConfig";
 import { compassConfig } from "@/config/compassConfig";
@@ -32,6 +34,18 @@ import { pruneUnavailableNavLinks } from "../utils/nav-utils.ts";
  * 无论哪种来源，指向已关闭功能页面的入口都会在 `navBarConfig` 处被裁掉。
  */
 export const LinkPresets: Record<string, NavBarLink> = {
+	Guestbook: {
+		name: i18n(I18nKey.guestbook),
+		url: "/guestbook/",
+		icon: "material-symbols:forum-outline-rounded",
+		pageKey: "guestbook",
+	},
+	Sponsor: {
+		name: i18n(I18nKey.sponsor),
+		url: "/sponsor/",
+		icon: "material-symbols:favorite-outline-rounded",
+		pageKey: "sponsor",
+	},
 	Home: {
 		name: i18n(I18nKey.home),
 		url: "/",
@@ -183,6 +197,8 @@ function resolveName(name: string): string {
  * 关闭判定只看配置，与导航结构无关，因此默认结构与内容仓声明式条目共用同一张表。
  */
 const unavailableFeatureRoutes: ReadonlySet<string> = new Set([
+	...(guestbookConfig.enable ? [] : ["/guestbook"]),
+	...(sponsorConfig.enable ? [] : ["/sponsor"]),
 	...(friendsConfig.enable ? [] : ["/friends"]),
 	...(momentsConfig.enable ? [] : ["/moments"]),
 	...(animeConfig.enable ? [] : ["/anime"]),

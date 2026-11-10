@@ -2,7 +2,11 @@ import Key from "../i18nKey-runtime.mjs";
 import type { Translation } from "../translation.ts";
 
 export const en: Translation = {
+	[Key.friendApplicationCopy]: "Copy {label}",
+	[Key.projectDetails]: "Details",
 	[Key.home]: "Home",
+	[Key.guestbook]: "Guestbook",
+	[Key.sponsor]: "Support",
 	[Key.about]: "About",
 	[Key.archive]: "Archive",
 	[Key.archiveGroup]: "Group archive by",
