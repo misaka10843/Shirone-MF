@@ -119,7 +119,6 @@ const ratingLabel = $derived(
 	</div>
 
 	<div class="game-card__body">
-			{#if game.sources}<div class="game-card__meta"><a href={game.sources.bangumi} target="_blank" rel="noopener noreferrer">Bangumi</a>{#if game.sources.vndb}<a href={game.sources.vndb} target="_blank" rel="noopener noreferrer">VNDB</a>{/if}</div>{/if}
 		<div class="game-card__meta">
 			{#if game.rating !== undefined}
 				<span class="game-card__rating" aria-label={ratingLabel}>
@@ -153,10 +152,15 @@ const ratingLabel = $derived(
 			</div>
 		{/if}
 
-		<p class="game-card__description">{game.description}</p>
+		{#if game.description}<p class="game-card__description">{game.description}</p>{/if}
 
 		<div class="game-card__footer">
-			{#if game.link}
+			{#if game.sources}
+				<nav class="game-card__sources" aria-label={`${game.name} · ${i18n(I18nKey.gameSources)}`}>
+					<a class="game-card__source m3-state-layer" href={game.sources.bangumi} target="_blank" rel="noopener noreferrer"><Icon icon="material-symbols:bookmark-outline-rounded" width={20} height={20} /><span><strong>Bangumi</strong><small>{i18n(I18nKey.gameSourceCollection)}</small></span><Icon icon="material-symbols:arrow-outward-rounded" width={16} height={16} /></a>
+					{#if game.sources.vndb}<a class="game-card__source m3-state-layer" href={game.sources.vndb} target="_blank" rel="noopener noreferrer"><Icon icon="material-symbols:database-outline-rounded" width={20} height={20} /><span><strong>VNDB</strong><small>{i18n(I18nKey.gameSourceDatabase)}</small></span><Icon icon="material-symbols:arrow-outward-rounded" width={16} height={16} /></a>{/if}
+				</nav>
+			{:else if game.link}
 				<a
 					class="game-card__link"
 					href={game.link}
@@ -173,6 +177,35 @@ const ratingLabel = $derived(
 
 <style lang="stylus">
 @import "../../styles/breakpoints.styl"
+
+.game-card__sources
+	display: grid
+	grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr))
+	gap: var(--m3e-space-2)
+	width: 100%
+.game-card__source
+	position: relative
+	display: flex
+	align-items: center
+	gap: var(--m3e-space-2)
+	padding: var(--m3e-space-3)
+	border: 1px solid var(--outline-variant)
+	border-radius: var(--shape-corner-m)
+	background: var(--surface-container-low)
+	color: var(--on-surface)
+	text-decoration: none
+	span
+		flex: 1
+	strong
+		display: block
+		font: var(--m3e-type-label-large)
+	small
+		display: block
+		font: var(--m3e-type-label-small)
+		color: var(--on-surface-variant)
+	&:focus-visible
+		outline: 2px solid var(--primary)
+		outline-offset: 2px
 
 .game-card
 	display: flex
