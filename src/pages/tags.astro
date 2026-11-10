@@ -8,14 +8,21 @@ import Chip from "@components/atoms/action/Chip.astro";
  */
 import Card from "@components/atoms/display/Card.svelte";
 import PageHeader from "@components/atoms/display/PageHeader.astro";
+import Icon from "@components/atoms/display/Icon.svelte";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
-import { getTagList } from "@utils/content-utils";
+import { getTagList, getSortedPostsList } from "@utils/content-utils";
 import { getTagUrl } from "@utils/url-utils";
 
-const tags = await getTagList();
-const totalPosts = tags.reduce((sum, tag) => sum + tag.count, 0);
+const [tagList, posts] = await Promise.all([
+	getTagList(),
+	getSortedPostsList(),
+]);
+const tags = tagList.sort(
+	(a, b) => b.count - a.count || a.name.localeCompare(b.name),
+);
+const totalPosts = posts.length;
 const tagSummary = `${tags.length} ${i18n(I18nKey.tagsCount)} · ${totalPosts} ${i18n(I18nKey.postsCount)}`;
 ---
 
@@ -27,8 +34,15 @@ const tagSummary = `${tags.length} ${i18n(I18nKey.tagsCount)} · ${totalPosts} $
 				subtitle={tagSummary}
 		/>
 		{tags.length > 0 && (
-			<div class="tag-index__cloud">
+				<tag-explorer>
+				<div class="tag-index__tools">
+					<label class="tag-index__search"><Icon icon="material-symbols:search-rounded" width={20} height={20}/><span class="sr-only">{i18n(I18nKey.tagFilter)}</span><input type="search" data-tag-search placeholder={i18n(I18nKey.tagFilter)} autocomplete="off" /></label>
+					<div class="tag-index__sorting"><button type="button" data-tag-sort="popular" aria-pressed="true" class="m3-state-layer">{i18n(I18nKey.tagSortPopular)}</button><button type="button" data-tag-sort="name" aria-pressed="false" class="m3-state-layer">{i18n(I18nKey.tagSortName)}</button></div>
+					<output data-tag-result aria-live="polite">{tags.length} / {tags.length}</output>
+				</div>
+				<ul class="tag-index__cloud">
 				{tags.map((tag) => (
+						<li data-tag-item data-tag-name={tag.name} data-tag-count={tag.count}>
 					<Chip
 						href={getTagUrl(tag.name)}
 						variant="tonal"
@@ -37,8 +51,11 @@ const tagSummary = `${tags.length} ${i18n(I18nKey.tagsCount)} · ${totalPosts} $
 						{tag.name}
 						<span class="tag-index__count">{tag.count}</span>
 					</Chip>
+						</li>
 				))}
-			</div>
+				</ul>
+				<p class="tag-index__empty" data-tag-empty hidden>{i18n(I18nKey.noData)}</p>
+				</tag-explorer>
 		)}
 		{tags.length === 0 && (
 			<div class="tag-index__empty">
@@ -47,6 +64,30 @@ const tagSummary = `${tags.length} ${i18n(I18nKey.tagsCount)} · ${totalPosts} $
 		)}
 	</Card>
 </MainGridLayout>
+
+<script>
+class TagExplorer extends HTMLElement {
+	connectedCallback() {
+		const input=this.querySelector<HTMLInputElement>("[data-tag-search]");
+		const items=[...this.querySelectorAll<HTMLElement>("[data-tag-item]")];
+		const list=this.querySelector(".tag-index__cloud");
+		const buttons=[...this.querySelectorAll<HTMLButtonElement>("[data-tag-sort]")];
+		let sort="popular";
+		const update=()=>{
+			const query=(input?.value??"").normalize("NFKC").trim().toLocaleLowerCase();
+			items.sort((a,b)=>sort==="popular"?Number(b.dataset.tagCount)-Number(a.dataset.tagCount)||(a.dataset.tagName??"").localeCompare(b.dataset.tagName??""):(a.dataset.tagName??"").localeCompare(b.dataset.tagName??""));
+			for(const item of items){item.hidden=!(item.dataset.tagName??"").normalize("NFKC").toLocaleLowerCase().includes(query);list?.append(item);}
+			const count=items.filter(item=>!item.hidden).length;
+			const result=this.querySelector("[data-tag-result]");if(result)result.textContent=`${count} / ${items.length}`;
+			const empty=this.querySelector<HTMLElement>("[data-tag-empty]");if(empty)empty.hidden=count>0;
+			for(const button of buttons)button.setAttribute("aria-pressed",String(button.dataset.tagSort===sort));
+		};
+		input?.addEventListener("input",update);
+		for(const button of buttons)button.addEventListener("click",()=>{sort=button.dataset.tagSort??"popular";update();});
+	}
+}
+if(!customElements.get("tag-explorer"))customElements.define("tag-explorer",TagExplorer);
+</script>
 
 <style lang="stylus">
 @import "../styles/breakpoints.styl"
@@ -58,6 +99,58 @@ const tagSummary = `${tags.length} ${i18n(I18nKey.tagsCount)} · ${totalPosts} $
 		display: flex
 		flex-wrap: wrap
 		gap: var(--m3e-space-2) var(--m3e-space-3)
+		list-style: none
+		padding: 0
+		margin: var(--m3e-space-5) 0 0
+		[hidden]
+			display: none
+	&__tools
+		display: flex
+		align-items: center
+		flex-wrap: wrap
+		gap: var(--m3e-space-3)
+		output
+			font: var(--m3e-type-label-medium)
+			color: var(--on-surface-variant)
+			margin-left: auto
+	&__search
+		display: flex
+		align-items: center
+		gap: var(--m3e-space-2)
+		padding: var(--m3e-space-3)
+		border: 1px solid var(--outline-variant)
+		border-radius: var(--shape-corner-m)
+		color: var(--on-surface-variant)
+		background: var(--surface-container-low)
+		flex: 1 1 12rem
+		input
+			width: 100%
+			min-width: 0
+			background: transparent
+			color: var(--on-surface)
+			font: var(--m3e-type-body-medium)
+			border: 0
+		&:focus-within
+			outline: 2px solid var(--primary)
+	&__sorting
+		display: flex
+		gap: var(--m3e-space-2)
+		button
+			position: relative
+			min-height: 2.75rem
+			padding: var(--m3e-space-2) var(--m3e-space-3)
+			border: 1px solid var(--outline-variant)
+			border-radius: var(--shape-corner-m)
+			font: var(--m3e-type-label-large)
+			color: var(--on-surface)
+			cursor: pointer
+		button[aria-pressed="true"]
+			background: var(--primary-container)
+			color: var(--on-primary-container)
+		button:focus-visible
+			outline: 2px solid var(--primary)
+	&__empty[hidden]
+		display: none
 
 	/* 计数徽标：chip 内部右侧的小号数字，与站内 badge 语言一致 */
 	&__count
