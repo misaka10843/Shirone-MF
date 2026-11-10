@@ -269,6 +269,7 @@ document.addEventListener('swup:content:replace', bindSearchTriggers);
 <style>
 	.top-app-bar {
 			background: transparent;
+			border-radius: 0 0 var(--shape-corner-l) var(--shape-corner-l);
 			border-bottom: 1px solid color-mix(in oklab, var(--outline-variant) 45%, transparent);
 		box-shadow: var(--m3e-elevation-1);
 		transition:
@@ -284,6 +285,12 @@ document.addEventListener('swup:content:replace', bindSearchTriggers);
 		.top-app-bar--transparent {
 			background: transparent;
 				color: var(--on-surface);
+		}
+		@media (min-width: 1024px) {
+			.top-app-bar {
+				width: min(var(--page-width), calc(100% - 2rem));
+				margin-inline: auto;
+			}
 		}
 
 			:global(.top-app-bar--transparent .top-app-bar__search-shell--expanded) {
@@ -318,6 +325,7 @@ document.addEventListener('swup:content:replace', bindSearchTriggers);
 			content: "";
 			position: absolute;
 			inset: 0;
+			border-radius: inherit;
 			z-index: -1;
 			pointer-events: none;
 			background: color-mix(in oklab, var(--surface-container) 88%, transparent);
