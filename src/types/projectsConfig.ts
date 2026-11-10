@@ -36,6 +36,8 @@ export interface ProjectItem {
 	repository?: string;
 	/** 自由格式的年份或时间范围，如 2024–2026。 */
 	year?: string;
+	/** Publish content/spec/projects/<key>.md as a project detail page. */
+	details?: boolean;
 }
 
 /** 项目页配置（行为层）。 */

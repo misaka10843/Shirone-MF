@@ -1,441 +1,64 @@
 <script lang="ts">
-/**
- * 项目卡片（分子）：统一卡片壳 + 单一骨架，无断点分叉。
- * - 卡片壳对齐站点卡片语言（FriendCard/AnimeCard/SkillCard）：
- *   --card-bg + outline-variant 描边 + corner-l，hover 升级描边与 elevation-2；
- * - 代表项目（featured）：高亮边框渐变 + Featured 徽章；
- * - 有封面：通栏 16/9 媒体区（aspect-ratio 锁高 + object-fit: cover），
- *   任何宽度下图片都不可能撑高卡片，手机端不再被拉伸；
- *   加载前显示主题色渐变占位；封面可点（website）时整图外链；
- * - 无封面：回退为精致图标瓷砖头（图标 + 标题/阶段并排），不保留空图槽；
- * - 阶段为 tonal pill：语义色经 inline --project-phase-color 注入
- *   （shipped → tertiary / building → primary / exploring → secondary，
- *   与 ANIME_STATUS_META 的角色映射同源），避免动态 class 触发
- *   Svelte unused-CSS 剥离（见 rules/pitfalls.md 1.6）；
- * - 技术栈微胶囊（micro-badges）：统一 tonal pill 风格；
- * - 操作链接：M3 胶囊操作按钮，带图标与交互动效；
- * - 封面加载失败自动回退到图标形态，不破版。
- */
+// Cover-first layout adapted from Firefly ProjectCard.astro (MIT); see THIRD_PARTY_NOTICES.md.
+import Icon from "@components/atoms/display/Icon.svelte";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
-import Icon from "@iconify/svelte";
 import { reveal } from "@utils/motion";
+import { url } from "@utils/url-utils";
 import type { ProjectItem, ProjectPhase } from "@/types/projectsConfig";
-
 let { project, delay = 0 }: { project: ProjectItem; delay?: number } = $props();
-
 let coverFailed = $state(false);
-
-const phaseMeta: Record<
-	ProjectPhase,
-	{ key: I18nKey; icon: string; color: string }
-> = {
-	shipped: {
-		key: I18nKey.projectPhaseShipped,
-		icon: "material-symbols:check-circle-outline-rounded",
-		color: "var(--tertiary)",
-	},
-	building: {
-		key: I18nKey.projectPhaseBuilding,
-		icon: "material-symbols:construction-rounded",
-		color: "var(--primary)",
-	},
-	exploring: {
-		key: I18nKey.projectPhaseExploring,
-		icon: "material-symbols:explore-outline-rounded",
-		color: "var(--secondary)",
-	},
+const phases: Record<ProjectPhase, I18nKey> = {
+	shipped: I18nKey.projectPhaseShipped,
+	building: I18nKey.projectPhaseBuilding,
+	exploring: I18nKey.projectPhaseExploring,
 };
-
-const phase = $derived(phaseMeta[project.phase]);
-const showCover = $derived(Boolean(project.cover) && !coverFailed);
+const detail = $derived(
+	project.details
+		? url(`/projects/${encodeURIComponent(project.key)}/`)
+		: undefined,
+);
 </script>
 
-{#snippet coverImage()}
-	<img
-		src={project.cover}
-		alt={project.coverAlt ?? project.title}
-		loading="lazy"
-		decoding="async"
-		onerror={() => (coverFailed = true)}
-	/>
-	<span class="project-card__scrim" aria-hidden="true"></span>
-	{#if project.featured}
-		<span class="project-card__featured-badge" aria-hidden="true">
-			<Icon icon="material-symbols:star-rounded" />
-			<span>{i18n(I18nKey.pinned)}</span>
-		</span>
-	{/if}
-{/snippet}
-
-<article
-	class={`project-card ${showCover ? "project-card--with-cover" : "project-card--without-cover"} ${project.featured ? "project-card--featured" : ""}`}
-	data-project={project.key}
-	style={`--project-phase-color: ${phase.color};`}
-	use:reveal={{ delay }}
->
-	{#if showCover}
-		{#if project.website}
-			<a
-				class="project-card__cover"
-				href={project.website}
-				target="_blank"
-				rel="noopener noreferrer"
-				aria-label={`${project.title} · ${i18n(I18nKey.projectVisit)}`}
-			>
-				{@render coverImage()}
-			</a>
-		{:else}
-			<div class="project-card__cover">
-				{@render coverImage()}
-			</div>
-		{/if}
-	{/if}
-
-	<div class="project-card__body">
-		<div class="project-card__header">
-			{#if !showCover}
-				<span class="project-card__icon" aria-hidden="true">
-					<Icon icon={project.icon ?? "material-symbols:deployed-code-outline-rounded"} />
-				</span>
-			{/if}
-
-			<div class="project-card__heading">
-				<div class="project-card__title-row">
-					<h2 class="project-card__title">{project.title}</h2>
-					{#if project.year}
-						<span class="project-card__year">{project.year}</span>
-					{/if}
-				</div>
-				<span class="project-card__phase" data-phase={project.phase}>
-					<Icon icon={phase.icon} aria-hidden="true" />
-					{i18n(phase.key)}
-				</span>
-			</div>
-		</div>
-
-		<p class="project-card__summary">{project.summary}</p>
-
-		{#if project.technologies.length > 0}
-			<ul
-				class="project-card__technologies"
-				aria-label={i18n(I18nKey.projectTechnologies)}
-			>
-				{#each project.technologies as technology (technology)}
-					<li>{technology}</li>
-				{/each}
-			</ul>
-		{/if}
-
-		{#if project.website || project.repository}
-			<div class="project-card__actions">
-				{#if project.website}
-					<a href={project.website} target="_blank" rel="noopener noreferrer">
-						<Icon icon="material-symbols:open-in-new-rounded" aria-hidden="true" />
-						{i18n(I18nKey.projectVisit)}
-					</a>
-				{/if}
-				{#if project.repository}
-					<a href={project.repository} target="_blank" rel="noopener noreferrer">
-						<Icon icon="fa7-brands:github" aria-hidden="true" />
-						{i18n(I18nKey.projectSource)}
-					</a>
-				{/if}
-			</div>
-		{/if}
-	</div>
+<article class={`project-card ${project.featured ? "project-card--featured" : ""}`} data-project={project.key} use:reveal={{delay}}>
+ <a class="project-card__cover" href={detail ?? project.website ?? project.repository} aria-label={`${project.title} · ${i18n(phases[project.phase])}`}>
+  {#if project.cover && !coverFailed}<img src={project.cover} alt={project.coverAlt ?? ""} loading="lazy" decoding="async" onerror={() => coverFailed = true} />
+  {:else}<Icon icon={project.icon ?? "material-symbols:rocket-launch-rounded"} width={64} height={64} />{/if}
+  <span class="project-card__phase" data-phase={project.phase}>{i18n(phases[project.phase])}</span>
+  <span class="project-card__cover-arrow" aria-hidden="true"><Icon icon="material-symbols:chevron-right-rounded" width={48} height={48} /></span>
+ </a>
+ <div class="project-card__body">
+  <h2 class="project-card__title">{#if detail}<a href={detail}>{project.title}</a>{:else}{project.title}{/if}</h2>
+  <div class="project-card__meta">
+   {#if project.year}<span><Icon icon="material-symbols:calendar-today-outline-rounded" width={18} height={18} />{project.year}</span>{/if}
+   {#if project.technologies.length}<span><Icon icon="material-symbols:tag-rounded" width={18} height={18} />{project.technologies.slice(0,2).join(" / ")}{project.technologies.length > 2 ? ` +${project.technologies.length - 2}` : ""}</span>{/if}
+  </div>
+  <p class="project-card__summary">{project.summary}</p>
+  <div class="project-card__actions">
+   {#if project.website}<a class="m3-state-layer" href={project.website} target="_blank" rel="noopener noreferrer"><Icon icon="material-symbols:open-in-new-rounded" width={16} height={16} />{i18n(I18nKey.projectVisit)}</a>{/if}
+   {#if project.repository}<a class="m3-state-layer" href={project.repository} target="_blank" rel="noopener noreferrer"><Icon icon="fa7-brands:github" width={16} height={16} />{i18n(I18nKey.projectSource)}</a>{/if}
+   {#if detail}<a class="project-card__details m3-state-layer" href={detail}>{i18n(I18nKey.projectDetails)}<Icon icon="material-symbols:chevron-right-rounded" width={16} height={16} /></a>{/if}
+  </div>
+ </div>
 </article>
 
-<style lang="stylus">
-@import "../../styles/breakpoints.styl"
-
-.project-card
-	position: relative
-	display: flex
-	flex-direction: column
-	box-sizing: border-box
-	min-width: 0
-	overflow: hidden
-	background: var(--card-bg)
-	border: 1px solid var(--outline-variant)
-	border-radius: var(--shape-corner-l)
-	transition:
-		border-color var(--m3e-duration-medium) var(--m3e-easing-emphasized-decelerate),
-		box-shadow var(--m3e-duration-medium) var(--m3e-easing-emphasized-decelerate),
-		transform var(--m3e-duration-medium) var(--m3e-easing-emphasized-decelerate),
-		background-color var(--m3e-duration-medium) var(--m3e-easing-standard)
-
-	&:hover
-		border-color: var(--outline)
-		box-shadow: var(--m3e-elevation-2)
-		transform: translateY(-2px)
-		background: unquote("color-mix(in oklab, var(--on-surface) 2%, var(--card-bg))")
-
-	/* 代表项目特色高亮：边框微光 */
-	&--featured
-		border-color: unquote("color-mix(in oklab, var(--primary) 38%, var(--outline-variant))")
-		&:hover
-			border-color: var(--primary)
-
-	/* 封面：16/9 稳定比例锁高，图片永远按 cover 裁切，杜绝纵向拉伸 */
-	&__cover
-		position: relative
-		display: block
-		width: 100%
-		aspect-ratio: 16 / 9
-		flex-shrink: 0
-		overflow: hidden
-		background: linear-gradient(160deg,
-			unquote("color-mix(in oklab, var(--primary) 16%, var(--surface-container-low))"),
-			var(--surface-container-high))
-		text-decoration: none
-
-		&:focus-visible
-			outline: 2px solid var(--primary)
-			outline-offset: -2px
-
-		> img
-			display: block
-			width: 100%
-			height: 100%
-			object-fit: cover
-			transition: transform var(--m3e-duration-long) var(--m3e-easing-emphasized-decelerate)
-
-			.project-card:hover &
-				transform: scale(1.05)
-
-	&__scrim
-		position: absolute
-		inset: 0
-		pointer-events: none
-		background: linear-gradient(180deg, rgba(0, 0, 0, 0.45) 0%, transparent 40%, rgba(0, 0, 0, 0.2) 100%)
-		opacity: 0.6
-		transition: opacity var(--m3e-duration-medium) var(--m3e-easing-standard)
-		.project-card:hover &
-			opacity: 0.8
-
-	/* 代表项目封面角标：毛玻璃 + star 图标 */
-	&__featured-badge
-		position: absolute
-		top: 0.625rem
-		left: 0.625rem
-		z-index: 2
-		display: inline-flex
-		align-items: center
-		gap: 0.25rem
-		padding: 0.1875rem 0.5rem
-		border-radius: var(--shape-corner-full)
-		background: unquote("color-mix(in srgb, #000 60%, transparent)")
-		backdrop-filter: blur(0.375rem)
-		-webkit-backdrop-filter: blur(0.375rem)
-		color: #fff
-		font: var(--m3e-type-label-small)
-		font-weight: 700
-		border: 1px solid rgba(255, 255, 255, 0.15)
-		> :global(svg)
-			width: 0.875rem
-			height: 0.875rem
-			color: #facc15
-
-	&__body
-		display: flex
-		flex-direction: column
-		flex: 1
-		gap: var(--m3e-space-3)
-		min-width: 0
-		padding: var(--m3e-space-4) var(--m3e-space-4)
-
-	&__header
-		display: flex
-		align-items: center
-		gap: 0.875rem
-		min-width: 0
-
-	/* 无封面紧凑变体：技术栈与源码操作合并一行，纵向节奏与有封面卡片对齐 */
-	&--without-cover &__body
-		display: grid
-		grid-template-columns: minmax(0, 1fr) auto
-		gap: 0.75rem 1rem
-		padding: 1.125rem 1.25rem
-
-	&--without-cover &__header,
-	&--without-cover &__summary
-		grid-column: 1 / -1
-
-	&--without-cover &__summary
-		min-height: 2.8em
-
-	&--without-cover &__technologies
-		align-self: center
-
-	&--without-cover &__actions
-		align-self: center
-		justify-content: flex-end
-		margin-top: 0
-		padding-top: 0
-
-	@media (max-width: 27.5rem)
-		&--without-cover &__body
-			grid-template-columns: minmax(0, 1fr)
-
-		&--without-cover &__header,
-		&--without-cover &__summary
-			grid-column: 1
-
-		&--without-cover &__actions
-			justify-content: flex-start
-
-	/* 图标瓷砖：无封面项目的视觉锚点（有封面时不渲染） */
-	&__icon
-		display: flex
-		align-items: center
-		justify-content: center
-		width: 2.875rem
-		height: 2.875rem
-		flex-shrink: 0
-		box-sizing: border-box
-		border-radius: var(--shape-corner-m)
-		background: linear-gradient(135deg,
-			unquote("color-mix(in oklab, var(--primary) 14%, var(--surface-container-high))"),
-			var(--surface-container-highest))
-		border: 1px solid var(--outline-variant)
-		color: var(--primary)
-		transition:
-			transform var(--m3e-duration-medium) var(--m3e-easing-emphasized-decelerate),
-			box-shadow var(--m3e-duration-medium) var(--m3e-easing-emphasized-decelerate)
-
-		> :global(svg)
-			width: 1.5rem
-			height: 1.5rem
-
-		.project-card:hover &
-			transform: translateY(-0.125rem)
-			box-shadow: var(--m3e-elevation-1)
-
-	&__heading
-		display: flex
-		flex-direction: column
-		flex: 1
-		gap: 0.375rem
-		min-width: 0
-
-	&__title-row
-		display: flex
-		align-items: baseline
-		justify-content: space-between
-		gap: 0.75rem
-		min-width: 0
-
-	&__title
-		margin: 0
-		min-width: 0
-		color: var(--on-surface)
-		font: var(--m3e-type-title-small)
-		font-weight: 700
-		line-height: 1.3
-		overflow-wrap: anywhere
-		transition: color var(--m3e-duration-short) var(--m3e-easing-standard)
-
-		.project-card:hover &
-			color: var(--primary)
-
-	&__year
-		flex-shrink: 0
-		padding: 0.0625rem 0.375rem
-		border-radius: var(--shape-corner-xs)
-		background: var(--surface-container-high)
-		color: var(--on-surface-variant)
-		font: var(--m3e-type-label-small)
-		font-variant-numeric: tabular-nums
-
-	/* 阶段 tonal pill：语义色来自 inline --project-phase-color */
-	&__phase
-		display: inline-flex
-		align-items: center
-		align-self: flex-start
-		gap: 0.3125rem
-		min-width: 0
-		padding: 0.125rem 0.5625rem
-		border-radius: var(--shape-corner-full)
-		background: unquote("color-mix(in oklab, var(--project-phase-color) 12%, transparent)")
-		color: var(--project-phase-color)
-		font: var(--m3e-type-label-small)
-		font-weight: 600
-		border: 1px solid unquote("color-mix(in oklab, var(--project-phase-color) 20%, transparent)")
-
-		> :global(svg)
-			width: 0.875rem
-			height: 0.875rem
-			flex-shrink: 0
-
-	&__summary
-		display: -webkit-box
-		min-height: 2.8em
-		margin: 0
-		overflow: hidden
-		-webkit-line-clamp: 2
-		-webkit-box-orient: vertical
-		color: var(--on-surface-variant)
-		font: var(--m3e-type-body-small)
-		line-height: 1.5
-
-	/* 技术栈徽标：微胶囊（micro-badges）风格 */
-	&__technologies
-		display: flex
-		flex-wrap: wrap
-		gap: 0.3125rem
-		margin: 0
-		padding: 0
-		list-style: none
-
-		li
-			display: inline-flex
-			align-items: center
-			padding: 0.125rem 0.5rem
-			border-radius: var(--shape-corner-m)
-			background: var(--surface-container-high)
-			color: var(--on-surface-variant)
-			font: var(--m3e-type-label-small)
-			font-weight: 500
-			transition:
-				background-color var(--m3e-duration-short) var(--m3e-easing-standard),
-				color var(--m3e-duration-short) var(--m3e-easing-standard)
-
-			&:hover
-				background: var(--surface-container-highest)
-				color: var(--on-surface)
-
-	/* 操作按钮：M3 胶囊操作按钮 */
-	&__actions
-		display: flex
-		flex-wrap: wrap
-		gap: 0.5rem
-		margin-top: auto
-		padding-top: 0.25rem
-
-		a
-			display: inline-flex
-			align-items: center
-			gap: 0.3125rem
-			padding: 0.25rem 0.625rem
-			border-radius: var(--shape-corner-m)
-			background: unquote("color-mix(in oklab, var(--primary) 8%, transparent)")
-			color: var(--primary)
-			font: var(--m3e-type-label-medium)
-			font-weight: 600
-			text-decoration: none
-			border: 1px solid unquote("color-mix(in oklab, var(--primary) 16%, transparent)")
-			transition:
-				background-color var(--m3e-duration-short) var(--m3e-easing-standard),
-				box-shadow var(--m3e-duration-short) var(--m3e-easing-standard),
-				transform var(--m3e-duration-short) var(--m3e-easing-standard)
-
-			&:hover
-				background: unquote("color-mix(in oklab, var(--primary) 16%, transparent)")
-				box-shadow: var(--m3e-elevation-1)
-				transform: translateY(-1px)
-
-			> :global(svg)
-				width: 1rem
-				height: 1rem
+<style>
+.project-card{display:flex;flex-direction:column;min-width:0;overflow:hidden;border-radius:var(--shape-corner-l);background:var(--surface-container-low);color:var(--on-surface)}
+.project-card__cover{display:flex;position:relative;align-items:center;justify-content:center;aspect-ratio:2/1;margin:var(--m3e-space-4) var(--m3e-space-4) 0;overflow:hidden;border-radius:var(--shape-corner-m);background:var(--surface-container-high);color:var(--primary)}
+.project-card__cover img{width:100%;height:100%;object-fit:cover;transition:transform var(--m3e-duration-medium) var(--m3e-easing-standard)}
+.project-card__cover:hover img{transform:scale(1.05)}
+.project-card__phase{position:absolute;top:var(--m3e-space-3);right:var(--m3e-space-3);padding:var(--m3e-space-1) var(--m3e-space-3);border-radius:var(--shape-corner-full);background:var(--primary-container);color:var(--on-primary-container);font:var(--m3e-type-label-small)}
+.project-card__cover-arrow{display:grid;place-items:center;position:absolute;inset:0;opacity:0;transition:opacity var(--m3e-duration-short) var(--m3e-easing-standard);background:color-mix(in oklab,var(--scrim) 60%,transparent);color:var(--inverse-on-surface)}
+.project-card__cover:hover .project-card__cover-arrow{opacity:1}
+.project-card__body{display:flex;flex-direction:column;flex:1;padding:var(--m3e-space-4);gap:var(--m3e-space-2)}
+.project-card__title{margin:0;font:var(--m3e-type-title-large);font-weight:700;line-height:1.35}
+.project-card__title a{color:inherit;text-decoration:none}.project-card__title a:hover{color:var(--primary)}
+.project-card__meta{display:flex;flex-wrap:wrap;gap:var(--m3e-space-4);font:var(--m3e-type-label-medium);color:var(--on-surface-variant)}
+.project-card__meta span{display:flex;align-items:center;gap:var(--m3e-space-2)}
+.project-card__summary{margin:0;color:var(--on-surface-variant);font:var(--m3e-type-body-medium);line-height:1.7;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.project-card__actions{display:flex;align-items:center;flex-wrap:wrap;gap:var(--m3e-space-2);margin-top:auto;padding-top:var(--m3e-space-3)}
+.project-card__actions a{position:relative;display:inline-flex;align-items:center;gap:var(--m3e-space-1);border-radius:var(--shape-corner-s);padding:var(--m3e-space-2);font:var(--m3e-type-label-small);background:var(--primary-container);color:var(--on-primary-container);text-decoration:none}
+.project-card__actions .project-card__details{margin-left:auto;background:transparent;color:var(--on-surface-variant)}
+.project-card a:focus-visible{outline:2px solid var(--primary);outline-offset:-2px}
+@media(prefers-reduced-motion:reduce){.project-card__cover img,.project-card__cover-arrow{transition:none}.project-card__cover:hover img{transform:none}}
 </style>

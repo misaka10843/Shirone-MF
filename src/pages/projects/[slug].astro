@@ -1,0 +1,36 @@
+---
+import { getEntry, render } from "astro:content";
+import Card from "@components/atoms/display/Card.svelte";
+import Markdown from "@components/content/Markdown.astro";
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+import { projectsConfig } from "@/config/projectsConfig";
+import { resolveProjectsData } from "@utils/feature-data";
+import { getMarkdownStylesheetAssets } from "@utils/markdown-assets";
+
+export async function getStaticPaths() {
+	if (!projectsConfig.enable) return [];
+	return Promise.all(
+		resolveProjectsData(projectsConfig)
+			.filter((project) => project.details)
+			.map(async (project) => {
+				if (!/^[a-zA-Z0-9][a-zA-Z0-9-]*$/.test(project.key))
+					throw new Error(`Invalid project detail key: ${project.key}`);
+				const entry = await getEntry("spec", `projects/${project.key}`);
+				if (!entry)
+					throw new Error(`Missing content/spec/projects/${project.key}.md`);
+				return { params: { slug: project.key }, props: { project, entry } };
+			}),
+	);
+}
+const { project, entry } = Astro.props;
+const { Content, headings, remarkPluginFrontmatter } = await render(entry);
+const styles = await getMarkdownStylesheetAssets(
+	remarkPluginFrontmatter.markdownSyntaxes,
+);
+---
+<MainGridLayout title={project.title} description={project.summary} page="projects" {headings}>
+    {styles.map(({ pack, css }) => <style is:inline slot="head" data-swup-optional={pack} set:html={css}></style>)}
+    <Card color="var(--card-bg)" radius="l" class="p-6 lg:p-8">
+        <Markdown class=""><Content /></Markdown>
+    </Card>
+</MainGridLayout>
