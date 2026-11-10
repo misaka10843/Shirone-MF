@@ -2,6 +2,23 @@ import Key from "../i18nKey-runtime.mjs";
 import type { Translation } from "../translation.ts";
 
 export const ko: Translation = {
+	[Key.gameAccountGenshin]: "원신",
+	[Key.gameAccountStarrail]: "붕괴: 스타레일",
+	[Key.gameAccountZZZ]: "젠레스 존 제로",
+	[Key.gameAccountEndfield]: "명일방주: 엔드필드",
+	[Key.gameAccountArknights]: "명일방주",
+	[Key.gameAccountNTE]: "이환",
+	[Key.gameAccountBlueArchive]: "블루 아카이브",
+	[Key.gameAccountLevel]: "레벨 {level}",
+	[Key.gameAccountAchievements]: "업적 {count}개",
+	[Key.gameAccountCharacters]: "전시 캐릭터 {count}명",
+	[Key.gameAccountNoPublicData]: "공개 프로필을 가져올 수 없습니다",
+	[Key.gameSources]: "데이터 출처",
+	[Key.gameSourceCollection]: "컬렉션 및 진행",
+	[Key.gameSourceDatabase]: "게임 정보",
+	[Key.tagFilter]: "태그 검색",
+	[Key.tagSortPopular]: "인기순",
+	[Key.tagSortName]: "이름순",
 	[Key.friendApplicationCopy]: "{label} 복사",
 	[Key.projectDetails]: "자세히 보기",
 	[Key.home]: "홈",

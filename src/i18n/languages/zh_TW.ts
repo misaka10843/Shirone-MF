@@ -2,6 +2,23 @@ import Key from "../i18nKey-runtime.mjs";
 import type { Translation } from "../translation.ts";
 
 export const zh_TW: Translation = {
+	[Key.gameAccountGenshin]: "原神",
+	[Key.gameAccountStarrail]: "崩壞：星穹鐵道",
+	[Key.gameAccountZZZ]: "絕區零",
+	[Key.gameAccountEndfield]: "明日方舟：終末地",
+	[Key.gameAccountArknights]: "明日方舟",
+	[Key.gameAccountNTE]: "異環",
+	[Key.gameAccountBlueArchive]: "蔚藍檔案",
+	[Key.gameAccountLevel]: "等級 {level}",
+	[Key.gameAccountAchievements]: "{count} 個成就",
+	[Key.gameAccountCharacters]: "{count} 個展示角色",
+	[Key.gameAccountNoPublicData]: "暫未取得公開資料",
+	[Key.gameSources]: "資料來源",
+	[Key.gameSourceCollection]: "收藏與進度",
+	[Key.gameSourceDatabase]: "遊戲資料",
+	[Key.tagFilter]: "篩選標籤",
+	[Key.tagSortPopular]: "依熱度",
+	[Key.tagSortName]: "依名稱",
 	[Key.friendApplicationCopy]: "複製{label}",
 	[Key.projectDetails]: "查看詳情",
 	[Key.home]: "首頁",

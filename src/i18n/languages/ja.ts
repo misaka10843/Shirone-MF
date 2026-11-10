@@ -2,6 +2,23 @@ import Key from "../i18nKey-runtime.mjs";
 import type { Translation } from "../translation.ts";
 
 export const ja: Translation = {
+	[Key.gameAccountGenshin]: "原神",
+	[Key.gameAccountStarrail]: "崩壊：スターレイル",
+	[Key.gameAccountZZZ]: "ゼンレスゾーンゼロ",
+	[Key.gameAccountEndfield]: "アークナイツ：エンドフィールド",
+	[Key.gameAccountArknights]: "アークナイツ",
+	[Key.gameAccountNTE]: "Neverness to Everness",
+	[Key.gameAccountBlueArchive]: "ブルーアーカイブ",
+	[Key.gameAccountLevel]: "レベル {level}",
+	[Key.gameAccountAchievements]: "実績 {count} 件",
+	[Key.gameAccountCharacters]: "展示キャラクター {count} 人",
+	[Key.gameAccountNoPublicData]: "公開プロフィールを取得できません",
+	[Key.gameSources]: "データソース",
+	[Key.gameSourceCollection]: "コレクションと進行状況",
+	[Key.gameSourceDatabase]: "ゲーム情報",
+	[Key.tagFilter]: "タグを絞り込む",
+	[Key.tagSortPopular]: "使用頻度順",
+	[Key.tagSortName]: "名前順",
 	[Key.friendApplicationCopy]: "{label}をコピー",
 	[Key.projectDetails]: "詳細",
 	[Key.home]: "Home",

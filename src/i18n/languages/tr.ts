@@ -2,6 +2,23 @@ import Key from "../i18nKey-runtime.mjs";
 import type { Translation } from "../translation.ts";
 
 export const tr: Translation = {
+	[Key.gameAccountGenshin]: "Genshin Impact",
+	[Key.gameAccountStarrail]: "Honkai: Star Rail",
+	[Key.gameAccountZZZ]: "Zenless Zone Zero",
+	[Key.gameAccountEndfield]: "Arknights: Endfield",
+	[Key.gameAccountArknights]: "Arknights",
+	[Key.gameAccountNTE]: "Neverness to Everness",
+	[Key.gameAccountBlueArchive]: "Blue Archive",
+	[Key.gameAccountLevel]: "{level}. seviye",
+	[Key.gameAccountAchievements]: "{count} başarı",
+	[Key.gameAccountCharacters]: "{count} sergilenen karakter",
+	[Key.gameAccountNoPublicData]: "Herkese açık profil kullanılamıyor",
+	[Key.gameSources]: "Veri kaynakları",
+	[Key.gameSourceCollection]: "Koleksiyon ve ilerleme",
+	[Key.gameSourceDatabase]: "Oyun veritabanı",
+	[Key.tagFilter]: "Etiketleri filtrele",
+	[Key.tagSortPopular]: "En çok kullanılan",
+	[Key.tagSortName]: "Ad",
 	[Key.friendApplicationCopy]: "{label} kopyala",
 	[Key.projectDetails]: "Ayrıntılar",
 	[Key.home]: "Anasayfa",
