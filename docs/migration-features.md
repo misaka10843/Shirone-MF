@@ -68,6 +68,54 @@ API contracts: [Bangumi](https://bangumi.github.io/api/),
 [VNDB Kana](https://api.vndb.org/kana). VNDB metadata remains attributed via each
 card's source link; see the [VNDB data license](https://vndb.org/d17).
 
+## About profile media and UID account cards
+
+The `profile.sections` frontmatter in `content/spec/about.md` supports:
+
+- `personality: { type: INFJ-T, gender: male }`: automatic 16Personalities avatar
+  matching; `-A` and `-T` variants use the corresponding four-letter type artwork.
+- `items[].logo`: an optional local or HTTPS team logo before each team. Failed
+  images retain a local SVG fallback instead of showing a broken image.
+- `musicLinks: [{ href: ... }]`: detects Spotify, QQ Music, Kugou, NetEase Cloud
+  Music and Apple Music domains, providing the platform icon and name. Optional
+  `label` and `logo` override presentation. No music player SDK is loaded.
+- `kind: games`: renders the configured UID account cards as a responsive grid.
+
+UID-only configuration belongs in `config/games.yaml`:
+
+```yaml
+profileAccounts:
+  - { game: genshin, uid: "156136129" }
+  - { game: starrail, uid: "100423516" }
+  - { game: zzz, uid: "11686584" }
+  - { game: endfield, uid: "1015932103" }
+```
+
+Run `pnpm.cmd profile-games:sync` and `pnpm.cmd content:sync`. Nicknames, levels,
+public signatures, achievements and showcased-character counts are derived from
+the provider responses, never authored as fake account data. The generated
+`data/game-account-snapshots.json` is re-exported by `data/games.ts`:
+
+```typescript
+export { default as gameAccountSnapshot } from "./game-account-snapshots.json";
+```
+
+The public provider is [Enka.Network](https://enka.network/), with
+[Genshin and ZZZ schemas](https://github.com/EnkaNetwork/API-docs). The Endfield
+normalizer follows the live `playerInfo.businessCard` response. Refreshes respect
+the returned TTL, time out after 15 seconds, enforce a 5 MB cap, and keep the last
+successful snapshot on failure. Builds and page visits do not call the account API.
+Changing a configured UID cannot expose another UID's cached profile.
+
+Arknights, Blue Archive and NTE may retain UID-only cards; there is currently no
+verified public UID-only adapter for them. A direct anonymous request to Skland's
+Arknights player-info endpoint returned HTTP 401 / code 10002 (login required).
+No login credentials are accepted in frontmatter or published snapshots.
+
+Music links in the migrated personal profile initially lead to the five platform
+homepages; replace them with personal playlists/profile links when desired.
+The unused self-tags section was removed from that profile only.
+
 ## WebP preparation in the source-checkout build
 
 Opt in with `image-optimization.json` at the external content repository root:
