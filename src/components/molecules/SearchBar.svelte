@@ -5,11 +5,12 @@
  * w-48 胶囊输入条，失焦延迟自动折叠。value / expanded 可双向绑定，
  * 展开折叠交互细节全部内聚在此，Search 有机体只负责搜索与结果面板。
  */
-import Icon from "@iconify/svelte";
+import Icon from "@components/atoms/display/Icon.svelte";
 
 let {
 	value = $bindable(""),
 	expanded = $bindable(false),
+	alwaysExpanded = false,
 	id = "search-input",
 	name = "search",
 	placeholder = "",
@@ -18,6 +19,7 @@ let {
 }: {
 	value?: string;
 	expanded?: boolean;
+	alwaysExpanded?: boolean;
 	id?: string;
 	name?: string;
 	placeholder?: string;
@@ -26,6 +28,7 @@ let {
 } = $props();
 
 let blurTimer: ReturnType<typeof setTimeout>;
+const isExpanded = $derived(alwaysExpanded || expanded);
 
 const expand = (): void => {
 	expanded = true;
@@ -49,10 +52,10 @@ const handleFocus = (): void => {
 };
 </script>
 
-<div class="hidden lg:block relative w-10 h-10 shrink-0">
+<div class={`hidden lg:block relative h-10 shrink-0 ${alwaysExpanded ? "w-40" : "w-10"}`}>
     <div
         class="m3-state-layer absolute right-0 top-0 flex items-center overflow-hidden rounded-full h-10 top-app-bar__search-shell
-               {expanded ? 'top-app-bar__search-shell--expanded w-48 bg-(--surface-container-high)' : 'w-10 bg-transparent'}"
+               {isExpanded ? (alwaysExpanded ? 'top-app-bar__search-shell--expanded w-40 bg-(--surface-container-high)' : 'top-app-bar__search-shell--expanded w-48 bg-(--surface-container-high)') : 'w-10 bg-transparent'}"
         style="transition: width var(--m3e-duration-medium) var(--m3e-easing-emphasized-decelerate), background-color var(--m3e-duration-short) var(--m3e-easing-standard);"
         onclick={() => {
             if (!expanded) expand();
@@ -61,7 +64,7 @@ const handleFocus = (): void => {
         <Icon
             icon="material-symbols:search"
             class="pointer-events-none shrink-0 text-[1.25rem] transition-colors duration-[var(--m3e-duration-short)]
-                   {expanded
+	                   {isExpanded
                        ? 'ml-3 text-[var(--on-surface-variant)]'
                        : 'mx-auto text-[var(--on-surface)]'}"
         ></Icon>
@@ -70,11 +73,11 @@ const handleFocus = (): void => {
             {name}
             {placeholder}
             bind:value
-            tabindex={expanded ? 0 : -1}
+	            tabindex={isExpanded ? 0 : -1}
             onfocus={handleFocus}
             onblur={handleBlur}
             class="h-full bg-transparent outline-0 text-(--on-surface) caret-(--primary) transition-opacity duration-[var(--m3e-duration-short)]
-                   {expanded ? 'w-32 pl-2 opacity-100' : 'w-0 opacity-0'}"
+	                   {isExpanded ? (alwaysExpanded ? 'w-28 pl-2 opacity-100' : 'w-32 pl-2 opacity-100') : 'w-0 opacity-0'}"
         />
     </div>
 </div>

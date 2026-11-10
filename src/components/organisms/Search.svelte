@@ -156,6 +156,7 @@ $: if (initialized) {
 <!-- 桌面搜索：SearchBar 分子（40px 图标按钮，hover/点击展开成胶囊搜索条） -->
 <SearchBar
     bind:value={keywordDesktop}
+	    alwaysExpanded
     id="search-input-desktop"
     name="search-desktop"
     placeholder={i18n(I18nKey.search)}
