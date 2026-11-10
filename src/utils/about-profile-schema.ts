@@ -24,11 +24,26 @@ export const aboutProfileSchema: z.ZodType<AboutProfileData> = z.object({
 		.array(
 			z.object({
 				id: z.string().regex(/^[a-z][a-z0-9-]*$/),
-				kind: z.enum(["text", "list", "tools", "posters", "quote"]),
+				kind: z.enum(["text", "list", "tools", "posters", "quote", "games"]),
 				title: z.string(),
 				eyebrow: z.string().optional(),
 				text: z.string().optional(),
 				image: localOrHttps.optional(),
+				personality: z
+					.object({
+						type: z.string().regex(/^[IE][NS][FT][JP](?:-[AT])?$/i),
+						gender: z.enum(["male", "female"]).optional(),
+					})
+					.optional(),
+				musicLinks: z
+					.array(
+						z.object({
+							href: localOrHttps,
+							label: z.string().optional(),
+							logo: localOrHttps.optional(),
+						}),
+					)
+					.optional(),
 				tone: z
 					.enum(["surface", "primary", "secondary", "tertiary"])
 					.optional(),
@@ -39,6 +54,7 @@ export const aboutProfileSchema: z.ZodType<AboutProfileData> = z.object({
 							title: z.string(),
 							description: z.string().optional(),
 							image: localOrHttps.optional(),
+							logo: localOrHttps.optional(),
 							href: localOrHttps.optional(),
 						}),
 					)

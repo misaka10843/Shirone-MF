@@ -8,6 +8,7 @@
  */
 
 import type { PageMeta } from "./pageMeta.ts";
+import type { GameAccountConfig } from "./gameAccount.ts";
 
 /** 游玩状态 */
 export type GameStatus =
@@ -70,6 +71,8 @@ export interface GameItem {
 
 /** 游戏页全局配置（行为层） */
 export interface GamesConfig extends PageMeta {
+	/** UID-only account cards on the about page; refreshed by profile-games:sync. */
+	profileAccounts?: GameAccountConfig[];
 	/** Optional offline collection sync. No browser API polling or credentials. */
 	remote?: {
 		bangumi: { enable: boolean; userId: string };

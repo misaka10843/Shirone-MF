@@ -3,12 +3,13 @@ export interface AboutProfileItem {
 	title: string;
 	description?: string;
 	image?: string;
+	logo?: string;
 	href?: string;
 }
 
 export interface AboutProfileSection {
 	id: string;
-	kind: "text" | "list" | "tools" | "posters" | "quote";
+	kind: "text" | "list" | "tools" | "posters" | "quote" | "games";
 	title: string;
 	eyebrow?: string;
 	text?: string;
@@ -17,6 +18,8 @@ export interface AboutProfileSection {
 	wide?: boolean;
 	items?: AboutProfileItem[];
 	link?: { label: string; href: string };
+	personality?: { type: string; gender?: "male" | "female" };
+	musicLinks?: { href: string; label?: string; logo?: string }[];
 }
 
 export interface AboutProfileData {

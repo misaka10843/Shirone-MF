@@ -1,0 +1,34 @@
+---
+import Icon from "@components/atoms/display/Icon.svelte";
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+import type { GameAccount, ProfileGame } from "@/types/gameAccount";
+interface Props {
+	account: GameAccount;
+}
+const { account } = Astro.props;
+const titles: Record<ProfileGame, I18nKey> = {
+	genshin: I18nKey.gameAccountGenshin,
+	starrail: I18nKey.gameAccountStarrail,
+	zzz: I18nKey.gameAccountZZZ,
+	endfield: I18nKey.gameAccountEndfield,
+	arknights: I18nKey.gameAccountArknights,
+	nte: I18nKey.gameAccountNTE,
+	bluearchive: I18nKey.gameAccountBlueArchive,
+};
+const stat = (key: I18nKey, placeholder: string, value: number) =>
+	i18n(key).replace(`{${placeholder}}`, String(value));
+---
+<article class="profile-game" data-profile-game={account.game} data-account-status={account.status}>
+ <div class="profile-game__header"><span class="profile-game__icon" aria-hidden="true"><Icon icon="material-symbols:sports-esports-outline-rounded" width={24} height={24}/></span><div><h3>{i18n(titles[account.game])}</h3><code>UID {account.uid}</code></div></div>
+ {account.status === "ready" ? <>
+  <p class="profile-game__name">{account.nickname}</p>
+  <ul class="profile-game__stats">
+   {account.level!==undefined && <li>{stat(I18nKey.gameAccountLevel,"level",account.level)}</li>}
+   {account.achievements!==undefined && <li>{stat(I18nKey.gameAccountAchievements,"count",account.achievements)}</li>}
+   {account.characters!==undefined && <li>{stat(I18nKey.gameAccountCharacters,"count",account.characters)}</li>}
+  </ul>
+  {account.signature && <p class="profile-game__signature">{account.signature}</p>}
+  {account.profileUrl && <a href={account.profileUrl} target="_blank" rel="noopener noreferrer" class="profile-game__provider">{account.source}<Icon icon="material-symbols:arrow-outward-rounded" width={16} height={16}/></a>}
+ </> : <p class="profile-game__unavailable">{i18n(I18nKey.gameAccountNoPublicData)}</p>}
+</article>

@@ -8,6 +8,13 @@ import MainGridLayout from "@layouts/MainGridLayout.astro";
 import { resolveI18nText } from "@utils/i18n-utils";
 import { getMarkdownStylesheetAssets } from "@utils/markdown-assets";
 import { aboutConfig } from "@/config/aboutConfig";
+import { gamesConfig } from "@/config/gamesConfig";
+import * as gameData from "@/data/games";
+import { readGameAccountSnapshot } from "@utils/game-accounts";
+const accounts = readGameAccountSnapshot(
+	"gameAccountSnapshot" in gameData ? gameData.gameAccountSnapshot : undefined,
+	gamesConfig.profileAccounts ?? [],
+);
 
 if (!aboutConfig.enable) {
 	return Astro.redirect("/404/");
@@ -29,7 +36,7 @@ const markdownStylesheetAssets = await getMarkdownStylesheetAssets(
 ---
 <MainGridLayout title={pageTitle} description={pageDescription} page="about">
     {markdownStylesheetAssets.map(({ pack, css }) => <style is:inline slot="head" data-swup-optional={pack} set:html={css}></style>)}
-    {aboutPost.data.profile && <AboutProfile profile={aboutPost.data.profile} />}
+    {aboutPost.data.profile && <AboutProfile profile={aboutPost.data.profile} {accounts} />}
     {aboutPost.body?.trim() && <>
     <div class="flex w-full rounded-[var(--shape-corner-l)] overflow-hidden relative min-h-32">
         <Card color="var(--card-bg)" radius="l" class="z-10 p-6 lg:p-8 relative w-full">

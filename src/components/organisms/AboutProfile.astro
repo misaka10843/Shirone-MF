@@ -2,17 +2,23 @@
 import Card from "@components/atoms/display/Card.svelte";
 import AccentBar from "@components/atoms/display/AccentBar.svelte";
 import Icon from "@components/atoms/display/Icon.svelte";
+import GameAccountCard from "@components/molecules/GameAccountCard.astro";
+import { personalityAvatar, musicPlatform } from "@utils/profile-media";
+import accountStyles from "@/styles/game-account-card.css?raw";
+import type { GameAccount } from "@/types/gameAccount";
 import profileStyles from "@/styles/about-profile.css?raw";
 import type { AboutProfileData } from "@/types/aboutProfile";
 
 interface Props {
 	profile: AboutProfileData;
+	accounts?: GameAccount[];
 }
-const { profile } = Astro.props;
+const { profile, accounts = [] } = Astro.props;
 ---
 
 <div class="about-profile" data-about-profile>
     <style is:inline data-about-profile-styles set:html={profileStyles}></style>
+    {!!accounts.length && <style is:inline data-game-account-styles set:html={accountStyles}></style>}
     <Card radius="l" color="var(--card-bg)" class="about-identity">
         <div class="identity-layout">
             <div class="identity-copy">
@@ -46,8 +52,13 @@ const { profile } = Astro.props;
                         <AccentBar size="small" color="var(--profile-accent)" />
                         <h2 id={`about-heading-${section.id}`}>{section.title}</h2>
                     </div>
+                    {section.personality && <img class="personality-avatar" src={personalityAvatar(section.personality.type,section.personality.gender)} alt="" width="200" height="240" loading="lazy" decoding="async" />}
                     {section.text && (section.kind === "quote" ? <blockquote>{section.text}</blockquote> : <p class="section-description">{section.text}</p>)}
                     {section.image && <img class="section-image" src={section.image} alt="" width="640" height="360" loading="lazy" decoding="async" />}
+                    {!!section.musicLinks?.length && <nav class="music-platforms" aria-label={section.title}>{section.musicLinks.map(link=>{
+                        const platform=musicPlatform(link.href);return platform && <a class="music-platform m3-state-layer" href={link.href} target="_blank" rel="noopener noreferrer">{link.logo || platform.logo ? <img src={link.logo??platform.logo} alt="" width="24" height="24" loading="lazy" decoding="async" /> : platform.icon && <Icon icon={platform.icon} width={24} height={24}/>}<span>{link.label??platform.name}</span><Icon icon="material-symbols:arrow-outward-rounded" width={16} height={16}/></a>;
+                    })}</nav>}
+                    {section.kind === "games" && !!accounts.length && <div class="profile-games">{accounts.map(account=><GameAccountCard {account}/>)}</div>}
 
                     {!!section.items?.length && <ul class:list={["section-items", `${section.kind}-items`]}>
                         {section.items.map(item => <li>
@@ -58,7 +69,7 @@ const { profile } = Astro.props;
                                 </span>
                                 <span>{item.title}</span>
                             </a> : <div class="item-row">
-                                {item.image && <span class="tool-image"><img src={item.image} alt="" width="36" height="36" loading="lazy" decoding="async" /></span>}
+                                {(item.logo || item.image) && <span class:list={["tool-image",{"team-logo":Boolean(item.logo)}]}>{item.logo && <Icon icon="material-symbols:groups-outline-rounded" width={28} height={28}/>}<img src={item.logo??item.image} alt="" width={item.logo?48:36} height={item.logo?48:36} loading="lazy" decoding="async" onerror="this.setAttribute('hidden','')" /></span>}
                                 <div class="item-copy">
                                     {item.href ? <a class="item-title" href={item.href}>{item.title}<Icon icon="material-symbols:arrow-outward-rounded" width={18} height={18} /></a> : <span class="item-title">{item.title}</span>}
                                     {item.description && <p>{item.description}</p>}
