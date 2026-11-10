@@ -10,7 +10,13 @@
 import type { PageMeta } from "./pageMeta.ts";
 
 /** 游玩状态 */
-export type GameStatus = "playing" | "completed" | "backlog" | "wishlist";
+export type GameStatus =
+	| "playing"
+	| "completed"
+	| "backlog"
+	| "wishlist"
+	| "onHold"
+	| "dropped";
 
 /** 游戏分类定义（数组顺序即筛选 Chips 渲染顺序） */
 export interface GameCategory {
@@ -58,10 +64,18 @@ export interface GameItem {
 	link?: string;
 	/** 特别推荐标记（渲染 Featured 徽章）。 */
 	featured?: boolean;
+	/** Source links remain separate; personal scores always belong to Bangumi. */
+	sources?: { bangumi: string; vndb?: string };
 }
 
 /** 游戏页全局配置（行为层） */
 export interface GamesConfig extends PageMeta {
+	/** Optional offline collection sync. No browser API polling or credentials. */
+	remote?: {
+		bangumi: { enable: boolean; userId: string };
+		/** Enrich the same collection; manual Bangumi subject ID → VNDB ID overrides. */
+		vndb?: { enable: boolean; matches?: Record<string, string> };
+	};
 	/** 页面总开关；关闭后隐藏导航入口并将 /games/ 重定向到 404。 */
 	enable: boolean;
 	/** 游戏分类列表（决定 Chips 渲染顺序）。 */

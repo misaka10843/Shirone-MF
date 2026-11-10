@@ -14,6 +14,11 @@ import { withUserConfig } from "../utils/config-overlay.ts";
  */
 export const gamesConfig: GamesConfig = withUserConfig("games", {
 	enable: true,
+	// Optional public collection snapshots. Enable and set a Bangumi username in content config.
+	remote: {
+		bangumi: { enable: false, userId: "" },
+		vndb: { enable: false, matches: {} },
+	},
 	title: "$t:games",
 	description: "$t:gamesBanner",
 	categories: [

@@ -15,7 +15,7 @@
  */
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
-import Icon from "@iconify/svelte";
+import Icon from "@components/atoms/display/Icon.svelte";
 import { reveal } from "@utils/motion";
 import type { GameItem, GameStatus } from "@/types/gamesConfig";
 
@@ -52,6 +52,18 @@ const statusMeta: Record<
 		icon: "material-symbols:bookmark-outline-rounded",
 		bg: "var(--secondary)",
 		fg: "var(--on-secondary)",
+	},
+	onHold: {
+		key: I18nKey.animeStatusOnHold,
+		icon: "material-symbols:pause-circle-outline-rounded",
+		bg: "var(--surface-container-highest)",
+		fg: "var(--on-surface-variant)",
+	},
+	dropped: {
+		key: I18nKey.animeStatusDropped,
+		icon: "material-symbols:cancel-outline-rounded",
+		bg: "var(--surface-container-highest)",
+		fg: "var(--on-surface-variant)",
 	},
 };
 
@@ -107,6 +119,7 @@ const ratingLabel = $derived(
 	</div>
 
 	<div class="game-card__body">
+			{#if game.sources}<div class="game-card__meta"><a href={game.sources.bangumi} target="_blank" rel="noopener noreferrer">Bangumi</a>{#if game.sources.vndb}<a href={game.sources.vndb} target="_blank" rel="noopener noreferrer">VNDB</a>{/if}</div>{/if}
 		<div class="game-card__meta">
 			{#if game.rating !== undefined}
 				<span class="game-card__rating" aria-label={ratingLabel}>
@@ -151,7 +164,7 @@ const ratingLabel = $derived(
 					rel="noopener noreferrer"
 				>
 					<Icon icon="material-symbols:open-in-new-rounded" aria-hidden="true" />
-					{i18n(I18nKey.gamesViewDetails)}
+					{i18n(game.sources ? I18nKey.projectDetails : I18nKey.gamesViewDetails)}
 				</a>
 			{/if}
 		</div>
