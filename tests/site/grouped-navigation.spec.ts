@@ -1,5 +1,35 @@
 import { expect, test } from "@playwright/test";
 
+test("article routes never activate unkeyed external links or their parent groups", async ({
+	page,
+}) => {
+	await page.goto("/");
+	const article = page.locator(".m3-blog-postcard__title").first();
+	test.skip(!(await article.count()), "No published articles");
+	const href = await article.getAttribute("href");
+	expect(href).toBeTruthy();
+	await page.goto(href!);
+	await expect(
+		page.locator('#navbar [data-nav-key=""].top-app-bar__nav-link--active'),
+	).toHaveCount(0);
+	await expect(
+		page.locator("#navbar .top-app-bar__nav-link--active"),
+	).toHaveCount(0);
+	await expect(page.locator('#navbar [aria-current="page"]')).toHaveCount(0);
+	await page.locator('#navbar a[href="/"]').first().click();
+	await page.waitForURL("http://localhost:4321/");
+	await expect(page.locator('#navbar [data-nav-key="home"]')).toHaveAttribute(
+		"aria-current",
+		"page",
+	);
+	await page.locator(".m3-blog-postcard__title").first().click();
+	await expect(page).not.toHaveURL("http://localhost:4321/");
+	await expect(
+		page.locator("#navbar .top-app-bar__nav-link--active"),
+	).toHaveCount(0);
+	await expect(page.locator('#navbar [aria-current="page"]')).toHaveCount(0);
+});
+
 test("desktop search stays visible without covering centered menus", async ({
 	page,
 }) => {

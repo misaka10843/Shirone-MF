@@ -109,13 +109,13 @@ function isActive(link: (typeof links)[number]): boolean {
 
 	function setTopAppBarNavigation(pageKey: string) {
 		document.querySelectorAll<HTMLElement>("[data-nav-key]").forEach((link) => {
-			const active = (link.dataset.navKey || "") === pageKey;
+				const active = Boolean(pageKey && link.dataset.navKey === pageKey);
 			link.classList.toggle("top-app-bar__nav-link--active", active);
 			if (active) link.setAttribute("aria-current", "page");
 			else link.removeAttribute("aria-current");
 		});
 		document.querySelectorAll<HTMLElement>("[data-nav-group]").forEach((group) => {
-			// 仅处理有下拉子菜单的组（组触发器是 button）；普通链接组已由上面设置
+				// Group summaries derive their active state only from matched child routes.
 				const trigger = group.querySelector("summary.top-app-bar__nav-link");
 			if (!trigger) return;
 			const active = Boolean(group.querySelector(".top-app-bar__submenu-item.top-app-bar__nav-link--active"));
