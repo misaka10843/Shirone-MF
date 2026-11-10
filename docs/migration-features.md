@@ -1,0 +1,93 @@
+# Personal-site migration features
+
+## Navigation and project presentation
+
+The desktop navbar is centered and constrained by `--page-width`, with a minimum
+viewport gutter. The mobile bar remains full width. Native disclosures support
+mouse hover, click, touch, keyboard arrows and Escape. The glass filter lives on a
+separate plane; the navbar intentionally does not use the opacity entrance animation,
+which creates a backdrop root and prevents its dropdown from blurring the wallpaper.
+
+Project cards follow Firefly's inset 2:1 cover, overlaid phase, compact metadata,
+summary and bottom actions. MIT attribution is in `THIRD_PARTY_NOTICES.md`.
+Set `details: true` on a project and supply `content/spec/projects/<key>.md` in the
+content repository for its `/projects/<key>/` page. Both source and package routes
+use the same spec schema and auto-discovered route.
+
+## Friend applications
+
+Set `showApplication: true` in the content repository's `config/friends.yaml`.
+Supply `data/friendApplication.ts` exporting `friendApplication` (type
+`FriendApplication` from `@/types/friendsConfig`). All identity fields, instructions,
+templates and notes are authored content. The optional panel renders below the friend
+list, has copy buttons and uses the existing comments provider. When disabled there
+is no panel, comment block or panel stylesheet. In npm mode, override
+`shirones/config/data/friendApplication.ts` instead.
+Re-export `friendApplication` from the existing `data/friends.ts` module (in npm
+mode, `shirones/config/data/friends.ts`). Existing sites that omit that export remain compatible.
+
+## One game collection, two sources
+
+`config/games.yaml`:
+
+```yaml
+enable: true
+categories:
+  - { key: collection, label: 游戏 }
+  - { key: visual-novel, label: 视觉小说 }
+remote:
+  bangumi: { enable: true, userId: misaka10843 }
+  vndb:
+    enable: true
+    matches: {} # Optional Bangumi subject ID → VNDB ID (v123) overrides
+```
+
+Run `pnpm.cmd games:sync`, then `pnpm.cmd content:sync`. The source-checkout helper
+writes `data/game-snapshots/collection.json` and its generated `data/gameCollection.ts`
+adapter into the external content repository. Commit both. Builds consume local
+snapshots and never poll either API. In package mode the same adapter is an ordinary
+data override in `shirones/config/data/`, importing the colocated snapshot.
+Re-export `gameCollection` from the existing `data/games.ts` module:
+`export { gameCollection } from "./gameCollection";`. Existing manual game modules
+do not need that export unless snapshot sync is enabled.
+
+Bangumi owns membership, playing/completed/wishlist/on-hold/dropped status and
+personal scores (0–10 converted to the existing 0–5 display). VNDB supplies developer
+metadata and source links to the **same card**, without requiring a VNDB account.
+Automatic matches require a unique exact normalized title or alias; fuzzy matches,
+ambiguous results and truncated searches are ignored. Explicit `matches` override
+ambiguous titles. `games:sync --refresh-vndb` refreshes cached matches.
+
+Requests time out after 15 seconds, reject oversized/non-JSON responses, and preserve
+the last valid collection on failures. A partial VNDB outage still permits Bangumi
+updates. Empty results do not erase an existing collection. No tokens are published.
+Remote configuration is optional and disabled by default; manual `data/games.ts`
+continues to work when the remote source is off.
+
+API contracts: [Bangumi](https://bangumi.github.io/api/),
+[VNDB Kana](https://api.vndb.org/kana). VNDB metadata remains attributed via each
+card's source link; see the [VNDB data license](https://vndb.org/d17).
+
+## WebP preparation in the source-checkout build
+
+Opt in with `image-optimization.json` at the external content repository root:
+
+```json
+{ "enable": true }
+```
+
+`pnpm.cmd build` syncs content, converts its images and syncs the rewritten references
+before Astro builds. To prepare a content commit, run `pnpm.cmd content:images`, review
+the **content repository's** diff and commit the converted files plus references.
+The helper deliberately does not stage or commit unrelated user edits.
+
+PNG and GIF use lossless WebP; JPEG/AVIF use quality 85. Animation frames/timing and
+alpha are retained; screenshots stay lossless. SVG, ICO, existing WebP and files under
+`favicon/` or `icons/` remain unchanged. Only `public/` and `assets/` raster files
+are converted. Authored Markdown, YAML, TS, JSON and other text references are updated,
+including encoded paths and query/fragment suffixes. External URLs stay unchanged.
+Existing WebP targets are never overwritten. Original raster files are deleted only
+after conversion validation and reference rewriting. The next build is a no-op.
+
+The content repository's image conversion is a source-checkout preparation command;
+npm consumers can run their own image preparation before supplying the public files.
