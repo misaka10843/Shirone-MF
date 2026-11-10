@@ -5,4 +5,5 @@ export const friendsConfig: FriendsConfig = withUserConfig("friends", {
 	enable: true,
 	title: "$t:friends",
 	description: "$t:friendsBanner",
+	showApplication: false,
 });

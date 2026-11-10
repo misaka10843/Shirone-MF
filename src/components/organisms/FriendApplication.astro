@@ -1,0 +1,62 @@
+---
+// Layout adapted from Firefly's friends.mdx (MIT); see THIRD_PARTY_NOTICES.md.
+import Icon from "@components/atoms/display/Icon.svelte";
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+import type { FriendApplication } from "@/types/friendsConfig";
+interface Props {
+	application: FriendApplication;
+}
+const { application: info } = Astro.props;
+const copyLabel = (label: string) =>
+	i18n(I18nKey.friendApplicationCopy).replace("{label}", label);
+const styles = `
+.friend-application{margin-top:var(--m3e-space-4);padding:var(--m3e-space-6);border-radius:var(--shape-corner-l);background:var(--card-bg);color:var(--on-surface)}
+.friend-application__columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--m3e-space-4)}
+.friend-application__panel{border:1px solid var(--outline-variant);border-radius:var(--shape-corner-l);padding:var(--m3e-space-6);min-width:0}
+.friend-application__identity{display:flex;align-items:center;gap:var(--m3e-space-4);margin-bottom:var(--m3e-space-5)}
+.friend-application__identity img{width:4rem;height:4rem;object-fit:cover;border-radius:var(--shape-corner-m)}
+.friend-application h2,.friend-application h3,.friend-application p{margin:0}
+.friend-application h2{font:var(--m3e-type-title-medium);font-weight:700;margin-bottom:var(--m3e-space-4)}
+.friend-application h3{font:var(--m3e-type-title-medium);font-weight:700}
+.friend-application p{font:var(--m3e-type-body-small);line-height:1.7;color:var(--on-surface-variant)}
+.friend-application__field{display:flex;justify-content:space-between;align-items:center;gap:var(--m3e-space-3);background:var(--surface-container-high);border-radius:var(--shape-corner-s);padding:var(--m3e-space-3);margin-top:var(--m3e-space-2);overflow-wrap:anywhere}
+.friend-application__field small{display:block;font:var(--m3e-type-label-small);color:var(--on-surface-variant)}
+.friend-application__field span{font:var(--m3e-type-body-small)}
+.friend-application button{position:relative;display:grid;place-items:center;flex-shrink:0;width:2rem;height:2rem;border:0;border-radius:var(--shape-corner-s);background:var(--secondary-container);color:var(--on-secondary-container);cursor:pointer}
+.friend-application button:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+.friend-application ol{list-style:none;padding:0;margin:0;counter-reset:friend-step}
+.friend-application li{position:relative;padding-left:2.5rem;padding-bottom:var(--m3e-space-5);counter-increment:friend-step}
+.friend-application li::before{content:counter(friend-step);position:absolute;left:0;top:0;display:grid;place-items:center;width:1.75rem;height:1.75rem;border-radius:var(--shape-corner-full);background:var(--primary);color:var(--on-primary);font:var(--m3e-type-label-large)}
+.friend-application li:not(:last-child)::after{content:"";position:absolute;left:.8125rem;top:2rem;bottom:.25rem;border-left:1px solid var(--outline-variant)}
+.friend-application li h3{font:var(--m3e-type-label-large);margin-bottom:var(--m3e-space-1)}
+.friend-application pre{white-space:pre-wrap;overflow-wrap:anywhere;font:var(--m3e-type-body-small);margin:0;line-height:1.7}
+.friend-application__notes{margin-top:var(--m3e-space-4)}
+.friend-application__notes p+p{margin-top:var(--m3e-space-2)}
+.friend-application__notes strong{color:var(--on-surface)}
+@media(max-width:767px){.friend-application__columns{grid-template-columns:1fr}.friend-application,.friend-application__panel{padding:var(--m3e-space-4)}}
+`;
+---
+<section class="friend-application" aria-label={info.title}>
+ <div class="friend-application__columns">
+  <div class="friend-application__panel">
+   <div class="friend-application__identity"><img src={info.avatar} alt="" width="64" height="64" loading="lazy" /><div><h2>{info.name}</h2><p>{info.description}</p></div></div>
+   {info.fields.map(field => <div class="friend-application__field"><div><small>{field.label}</small><span>{field.value}</span></div><button type="button" class="m3-state-layer" data-friend-copy={field.value} aria-label={copyLabel(field.label)}><Icon icon="material-symbols:content-copy-outline-rounded" width={16} height={16} /></button></div>)}
+  </div>
+  <div class="friend-application__panel"><h2>{info.title}</h2><ol>{info.steps.map(step => <li><h3>{step.title}</h3><p>{step.description}</p>{step.template && <div class="friend-application__field"><pre>{step.template}</pre><button type="button" class="m3-state-layer" data-friend-copy={step.template} aria-label={copyLabel(step.title)}><Icon icon="material-symbols:content-copy-outline-rounded" width={16} height={16} /></button></div>}</li>)}</ol></div>
+ </div>
+ <div class="friend-application__panel friend-application__notes"><h2>{info.notesTitle}</h2>{info.notes.map(note => <p><strong>{note.title}</strong>：{note.description}</p>)}</div>
+ <span data-friend-copy-status role="status" aria-live="polite"></span>
+</section>
+<style is:inline set:html={styles} />
+<script>
+ import I18nKey from "@i18n/i18nKey";
+ import { i18n } from "@i18n/translation";
+ document.addEventListener("click", async event => {
+  const button = (event.target as Element)?.closest<HTMLButtonElement>("[data-friend-copy]");
+  if (!button) return;
+  const status = button.closest(".friend-application")?.querySelector("[data-friend-copy-status]");
+  try { await navigator.clipboard.writeText(button.dataset.friendCopy ?? ""); if (status) status.textContent = i18n(I18nKey.copySuccess); }
+  catch { if (status) status.textContent = i18n(I18nKey.copyFailed); }
+ });
+</script>

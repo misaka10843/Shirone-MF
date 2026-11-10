@@ -4,7 +4,20 @@ import I18nKey from "@i18n/i18nKey";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
 import { resolveI18nText } from "@utils/i18n-utils";
 import { friendsConfig } from "@/config/friendsConfig";
-import { getFriendsList } from "../data/friends";
+import { siteConfig } from "@/config/siteConfig";
+import * as friendsData from "@/data/friends";
+import type { FriendApplication } from "@/types/friendsConfig";
+const { getFriendsList } = friendsData;
+const friendApplication = (
+	friendsData as { friendApplication?: FriendApplication }
+).friendApplication;
+const Application =
+	friendsConfig.showApplication && friendApplication
+		? (await import("@components/organisms/FriendApplication.astro")).default
+		: null;
+const Comments = Application
+	? (await import("@components/organisms/comment/CommentSection.astro")).default
+	: null;
 
 if (!friendsConfig.enable) {
 	return Astro.redirect("/404/");
@@ -17,6 +30,8 @@ const pageDescription = resolveI18nText(
 );
 ---
 
-<MainGridLayout title={pageTitle} description={pageDescription} page="friends">
+<MainGridLayout title={pageTitle} description={pageDescription} page="friends" hasComments={Boolean(Comments)}>
     <FriendSection friends={getFriendsList()} title={pageTitle} subtitle={pageDescription} client:visible></FriendSection>
+    {Application && friendApplication && <Application application={friendApplication} />}
+    {Comments && <Comments context={{key:"page:friends",path:"/friends/",title:pageTitle,language:siteConfig.lang}} />}
 </MainGridLayout>
