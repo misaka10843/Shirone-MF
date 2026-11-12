@@ -139,3 +139,19 @@ after conversion validation and reference rewriting. The next build is a no-op.
 
 The content repository's image conversion is a source-checkout preparation command;
 npm consumers can run their own image preparation before supplying the public files.
+
+## Article AI disclosure
+
+Set the optional `ai` field in an article's frontmatter to show a badge on the article card and the model list on its detail page.
+
+```yaml
+ai:
+  mode: assisted
+  models:
+    - provider: OpenAI
+      name: GPT-5
+    - provider: Anthropic
+      name: Claude
+```
+
+Use `generated` for AI-generated articles and `assisted` for AI-assisted writing. Supply at least one model. Recognized providers use brand icons and other providers use a generic model icon.
