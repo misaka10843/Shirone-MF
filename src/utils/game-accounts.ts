@@ -98,6 +98,15 @@ export function readGameAccountSnapshot(
 	return accounts
 		.filter((a) => a.enable !== false && /^\d{6,12}$/.test(a.uid))
 		.map((config) => {
+			const artwork = text(config.artwork, 2048);
+			const presentation = {
+				game: config.game,
+				uid: config.uid,
+				artwork:
+					artwork && /^(?:\/(?![\/\\])|https:\/\/)/i.test(artwork)
+						? artwork
+						: undefined,
+			};
 			const row = items
 				.map(object)
 				.find(
@@ -108,8 +117,7 @@ export function readGameAccountSnapshot(
 				);
 			if (!row)
 				return {
-					game: config.game,
-					uid: config.uid,
+					...presentation,
 					status: gameAccountEndpoint(config.game, config.uid)
 						? "unavailable"
 						: "unsupported",
@@ -117,10 +125,9 @@ export function readGameAccountSnapshot(
 			const nickname = text(row.nickname, 100),
 				level = count(row.level);
 			if (!nickname || level === undefined)
-				return { game: config.game, uid: config.uid, status: "unavailable" };
+				return { ...presentation, status: "unavailable" };
 			return {
-				game: config.game,
-				uid: config.uid,
+				...presentation,
 				status: "ready",
 				nickname,
 				level,

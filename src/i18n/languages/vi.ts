@@ -3,6 +3,10 @@ import type { Translation } from "../translation.ts";
 
 export const vi: Translation = {
 	[Key.gameAccountGenshin]: "Genshin Impact",
+	[Key.gameStatLevel]: "Cấp",
+	[Key.gameStatWorldLevel]: "Cấp thế giới",
+	[Key.gameStatAchievements]: "Thành tựu",
+	[Key.gameStatShowcase]: "Nhân vật trưng bày",
 	[Key.gameAccountStarrail]: "Honkai: Star Rail",
 	[Key.gameAccountZZZ]: "Zenless Zone Zero",
 	[Key.gameAccountEndfield]: "Arknights: Endfield",

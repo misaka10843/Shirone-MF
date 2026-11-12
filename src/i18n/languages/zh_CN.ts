@@ -3,6 +3,10 @@ import type { Translation } from "../translation.ts";
 
 export const zh_CN: Translation = {
 	[Key.gameAccountGenshin]: "原神",
+	[Key.gameStatLevel]: "等级",
+	[Key.gameStatWorldLevel]: "世界等级",
+	[Key.gameStatAchievements]: "达成成就",
+	[Key.gameStatShowcase]: "展示角色",
 	[Key.gameAccountStarrail]: "崩坏：星穹铁道",
 	[Key.gameAccountZZZ]: "绝区零",
 	[Key.gameAccountEndfield]: "明日方舟：终末地",

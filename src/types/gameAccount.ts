@@ -10,6 +10,8 @@ export interface GameAccountConfig {
 	game: ProfileGame;
 	uid: string;
 	enable?: boolean;
+	/** Optional decorative banner artwork from the site's public directory or HTTPS. */
+	artwork?: string;
 }
 export interface GameAccount {
 	game: ProfileGame;
@@ -25,4 +27,5 @@ export interface GameAccount {
 	profileUrl?: string;
 	fetchedAt?: string;
 	nextFetchAt?: string;
+	artwork?: string;
 }

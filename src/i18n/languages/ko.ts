@@ -3,6 +3,10 @@ import type { Translation } from "../translation.ts";
 
 export const ko: Translation = {
 	[Key.gameAccountGenshin]: "원신",
+	[Key.gameStatLevel]: "레벨",
+	[Key.gameStatWorldLevel]: "월드 레벨",
+	[Key.gameStatAchievements]: "업적",
+	[Key.gameStatShowcase]: "전시 캐릭터",
 	[Key.gameAccountStarrail]: "붕괴: 스타레일",
 	[Key.gameAccountZZZ]: "젠레스 존 제로",
 	[Key.gameAccountEndfield]: "명일방주: 엔드필드",
