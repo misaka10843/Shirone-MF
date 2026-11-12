@@ -2,6 +2,8 @@ import Key from "../i18nKey-runtime.mjs";
 import type { Translation } from "../translation.ts";
 
 export const es: Translation = {
+	[Key.postAiGenerated]: "Generado por IA",
+	[Key.postAiAssisted]: "Escritura asistida por IA",
 	[Key.gameAccountGenshin]: "Genshin Impact",
 	[Key.gameStatLevel]: "Nivel",
 	[Key.gameStatWorldLevel]: "Nivel del mundo",

@@ -8,6 +8,7 @@ import type { CollectionEntry } from "astro:content";
 import { render } from "astro:content";
 import path from "node:path";
 import PostCard from "@components/atoms/blog/PostCard.astro";
+import PostAiDisclosure from "@components/molecules/PostAiDisclosure.astro";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import { formatDateToYYYYMMDD } from "@utils/date-utils";
@@ -157,4 +158,8 @@ const excerpt =
 	category={categoryLink}
 	tags={tagLinks}
 	wordCount={wordCount}
-/>
+>
+	{entry.data.ai && !(isEncrypted && entry.data.hideHomeContent) && (
+		<PostAiDisclosure slot="disclosure" disclosure={entry.data.ai} compact />
+	)}
+</PostCard>

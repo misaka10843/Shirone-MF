@@ -9,6 +9,7 @@ import ImageWrapper from "@components/molecules/ImageWrapper.astro";
 import LastUpdatedNotice from "@components/molecules/LastUpdatedNotice.astro";
 import License from "@components/molecules/License.astro";
 import PostMetadata from "@components/molecules/PostMeta.astro";
+import PostAiDisclosure from "@components/molecules/PostAiDisclosure.astro";
 import SeriesCard from "@components/molecules/SeriesCard.astro";
 import ArticleDiscovery from "@components/organisms/ArticleDiscovery.astro";
 import ArticleShare from "@components/organisms/ArticleShare.svelte";
@@ -292,6 +293,9 @@ const jsonLd = {
 						tags={entry.data.tags}
 						category={entry.data.category}
 					></PostMetadata>
+				)}
+				{entry.data.ai && !(isEncrypted && entry.data.hideHomeContent) && (
+					<PostAiDisclosure disclosure={entry.data.ai} />
 				)}
 				{seriesCardVisible && seriesCardAtTop && series && (
 					<SeriesCard context={series} class="mb-5 onload-animation" />

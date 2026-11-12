@@ -318,6 +318,8 @@ enum I18nKey {
 	gameAccountNTE = "gameAccountNTE",
 	gameAccountBlueArchive = "gameAccountBlueArchive",
 	gameAccountLevel = "gameAccountLevel",
+	postAiGenerated = "postAiGenerated",
+	postAiAssisted = "postAiAssisted",
 	gameStatLevel = "gameStatLevel",
 	gameStatWorldLevel = "gameStatWorldLevel",
 	gameStatAchievements = "gameStatAchievements",

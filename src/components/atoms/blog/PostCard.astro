@@ -124,6 +124,7 @@ const titleLabel =
 			/>
 		)}
 		{description && <p class="m3-blog-postcard__desc">{description}</p>}
+		<slot name="disclosure" />
 		{tags.length > 0 && (
 			<div class="m3-blog-postcard__tags">
 				{tags.map((t) => (

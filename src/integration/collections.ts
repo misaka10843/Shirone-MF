@@ -2,6 +2,7 @@ import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
 import { specPageSchema } from "../utils/spec-page-schema";
+import { postAiSchema } from "../utils/post-ai-schema";
 
 /**
  * Post schema — used by both source repo (inline) and package mode users
@@ -29,6 +30,7 @@ export const postSchema: z.ZodType = z.object({
 	/** Position inside the series; falls back to publication order when absent. */
 	seriesOrder: z.number().int().optional(),
 	lang: z.string().optional().default(""),
+	ai: postAiSchema.optional(),
 
 	/* Per-post license override (omitted fields fall back to the site licenseConfig; a string is the license name) */
 	license: z

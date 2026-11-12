@@ -2,6 +2,7 @@ import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
 import { specPageSchema } from "./utils/spec-page-schema";
+import { postAiSchema } from "./utils/post-ai-schema";
 
 const postsCollection = defineCollection({
 	loader: glob({ base: "./src/content/posts", pattern: "**/*.{md,mdx}" }),
@@ -27,6 +28,7 @@ const postsCollection = defineCollection({
 		/** 系列内顺序；缺省回退为按发布日期排 */
 		seriesOrder: z.number().int().optional(),
 		lang: z.string().optional().default(""),
+		ai: postAiSchema.optional(),
 
 		/* 单篇版权覆写（省略字段回退到全站 licenseConfig；字符串简写许可证名称） */
 		license: z
