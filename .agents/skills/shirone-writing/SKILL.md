@@ -61,6 +61,10 @@ hideHomeContent: true   # 加密内容在首页隐藏(默认 true)
 - 未知 slug 静默容忍，不产生死链、不阻断构建，每个未知 slug 仅在构建日志打印一次 `[series] ...` 警告。
 - 站内入口为 `/series/`（每系列一张卡片的索引）与 `/series/<slug>/`（系列总览 + 有序文章列表）。
 
+## AI 写作披露
+
+可选字段 `ai` 包含 `mode`（`generated` 为 AI 生成，`assisted` 为 AI 辅助写作）和至少一项 `models`。每项模型填写 `provider` 与 `name`。列表显示标记，详情显示模型与厂商图标。示例见 `docs/migration-features.md`。
+
 ## 动态(moments)frontmatter
 
 `published`(必填)、`pinned`、`location`、`mood`(Iconify 图标名,如 `material-symbols:sentiment-excited-outline-rounded`)、`tags: []`、`images: [{src, alt}]`、`draft`。
