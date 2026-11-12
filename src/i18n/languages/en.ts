@@ -305,6 +305,7 @@ export const en: Translation = {
 	[Key.paginationNext]: "Next page",
 	[Key.paginationPage]: "Page {page}",
 	[Key.paginationJump]: "Jump to page",
+	[Key.paginationLabel]: "Pagination",
 	[Key.tagsViewAll]: "View all tags",
 
 	[Key.author]: "Author",

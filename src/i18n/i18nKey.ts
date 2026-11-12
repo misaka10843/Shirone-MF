@@ -296,6 +296,7 @@ enum I18nKey {
 	paginationNext = "paginationNext",
 	paginationPage = "paginationPage",
 	paginationJump = "paginationJump",
+	paginationLabel = "paginationLabel",
 
 	author = "author",
 	publishedAt = "publishedAt",

@@ -31,7 +31,13 @@ const pageDescription = resolveI18nText(
 ---
 
 <MainGridLayout title={pageTitle} description={pageDescription} page="friends" hasComments={Boolean(Comments)}>
-    <FriendSection friends={getFriendsList()} title={pageTitle} subtitle={pageDescription} client:visible></FriendSection>
-    {Application && friendApplication && <Application application={friendApplication} />}
+	<FriendSection
+		friends={getFriendsList()}
+		title={pageTitle}
+		subtitle={pageDescription}
+		pageSize={friendsConfig.pageSize}
+		client:visible
+	/>
+	{Application && friendApplication && <Application application={friendApplication} />}
 	{Comments && <Comments class="mt-4" context={{key:"page:friends",path:"/friends/",title:pageTitle,language:siteConfig.lang}} />}
 </MainGridLayout>

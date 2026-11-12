@@ -4,6 +4,33 @@
   "description": "Shirone friends config schema generated from @/types/friendsConfig.FriendsConfig",
   "type": "object",
   "properties": {
+    "showApplication": {
+      "anyOf": [
+        {},
+        {
+          "type": "boolean",
+          "enum": [
+            false
+          ]
+        },
+        {
+          "type": "boolean",
+          "enum": [
+            true
+          ]
+        }
+      ],
+      "description": "Render the content-owned application panel and page comments. Defaults to false."
+    },
+    "pageSize": {
+      "anyOf": [
+        {},
+        {
+          "type": "number"
+        }
+      ],
+      "description": "每页条数；省略或无效值回退 12。"
+    },
     "enable": {
       "anyOf": [
         {},
