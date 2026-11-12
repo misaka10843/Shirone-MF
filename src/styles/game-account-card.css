@@ -1,8 +1,14 @@
 .profile-games {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
-	gap: var(--m3e-space-4);
-	margin-top: var(--m3e-space-5);
+	grid-template-columns: minmax(0, 1fr);
+	gap: var(--m3e-space-3);
+	margin-top: var(--m3e-space-3);
+}
+
+@container profile (min-width: 36rem) {
+	.profile-games {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
 }
 
 .profile-game {
@@ -11,8 +17,8 @@
 	overflow: hidden;
 	display: grid;
 	align-content: start;
-	gap: var(--m3e-space-3);
-	padding: var(--m3e-space-4);
+	gap: var(--m3e-space-2);
+	padding: var(--m3e-space-3);
 	border: 1px solid var(--outline-variant);
 	border-radius: var(--shape-corner-l);
 	background: var(--surface-container-low);
@@ -20,7 +26,6 @@
 }
 
 .profile-game--banner {
-	grid-column: 1 / -1;
 	background: linear-gradient(115deg, var(--surface-container-low), var(--secondary-container));
 }
 
@@ -53,11 +58,15 @@
 
 .profile-game__header h3 {
 	margin: 0;
-	font: var(--m3e-type-label-large);
-	color: var(--on-surface-variant);
+	font: var(--m3e-type-title-medium);
+	font-weight: 600;
+	color: var(--on-surface);
 }
 
-.profile-game__header code {
+.profile-game__meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0 var(--m3e-space-2);
 	font: var(--m3e-type-label-medium);
 	color: var(--on-surface-variant);
 }
@@ -65,8 +74,8 @@
 .profile-game__icon,
 .profile-game__avatar {
 	flex: none;
-	width: 3.5rem;
-	height: 3.5rem;
+	width: 2.5rem;
+	height: 2.5rem;
 	border-radius: var(--shape-corner-m);
 }
 
@@ -81,19 +90,12 @@
 	color: var(--on-primary-container);
 }
 
-.profile-game__name {
-	margin: 0;
-	font: var(--m3e-type-headline-small);
-	font-weight: 600;
-	color: var(--on-surface);
-}
-
 .profile-game__stats {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(min(100%, 7rem), 1fr));
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 3.25rem), 1fr));
 	gap: var(--m3e-space-2);
 	margin: 0;
-	padding: var(--m3e-space-3);
+	padding: var(--m3e-space-2);
 	border-radius: var(--shape-corner-m);
 	background: color-mix(in oklab, var(--surface-container-high) 94%, transparent);
 }
@@ -114,7 +116,7 @@
 .profile-game__stat dd {
 	order: -1;
 	margin: 0;
-	font: var(--m3e-type-headline-small);
+	font: var(--m3e-type-title-medium);
 	font-variant-numeric: tabular-nums;
 	color: var(--on-surface);
 }
@@ -122,11 +124,17 @@
 .profile-game__footer {
 	display: flex;
 	align-items: center;
-	flex-wrap: wrap;
 	gap: var(--m3e-space-2);
 	padding: 0 var(--m3e-space-2);
 	border-radius: var(--shape-corner-s);
 	background: var(--surface-container-low);
+}
+
+.profile-game__signature {
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .profile-game__signature,
@@ -141,8 +149,9 @@
 .profile-game__provider {
 	display: inline-flex;
 	align-items: center;
+	flex: none;
 	gap: var(--m3e-space-1);
-	min-height: 2rem;
+	min-height: 1.5rem;
 	margin-inline-start: auto;
 	font: var(--m3e-type-label-medium);
 	color: var(--primary);

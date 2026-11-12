@@ -7,9 +7,8 @@ import { url } from "@utils/url-utils";
 
 interface Props {
 	account: GameAccount;
-	avatar?: string;
 }
-const { account, avatar } = Astro.props;
+const { account } = Astro.props;
 const titles: Record<ProfileGame, I18nKey> = {
 	genshin: I18nKey.gameAccountGenshin,
 	starrail: I18nKey.gameAccountStarrail,
@@ -34,17 +33,19 @@ const ready = account.status === "ready";
 >
 	{account.artwork && <img class="profile-game__artwork" src={url(account.artwork)} alt="" loading="lazy" decoding="async" />}
 	<header class="profile-game__header">
-		{ready && avatar ? (
-			<img class="profile-game__avatar" src={url(avatar)} alt="" width="56" height="56" loading="lazy" decoding="async" />
+		{ready && account.avatarUrl ? (
+			<img class="profile-game__avatar" src={account.avatarUrl} alt="" width="40" height="40" loading="lazy" decoding="async" />
 		) : (
 			<span class="profile-game__icon" aria-hidden="true">
 				<Icon icon="material-symbols:sports-esports-outline-rounded" width={24} height={24} />
 			</span>
 		)}
 		<div class="profile-game__identity">
-			<h3>{i18n(titles[account.game])}</h3>
-			{ready && <p class="profile-game__name">{account.nickname}</p>}
-			<code>UID {account.uid}</code>
+			<h3>{account.nickname ?? i18n(titles[account.game])}</h3>
+			<div class="profile-game__meta">
+				{ready && <span>{i18n(titles[account.game])}</span>}
+				<code>UID {account.uid}</code>
+			</div>
 		</div>
 	</header>
 	{ready ? (
@@ -61,7 +62,7 @@ const ready = account.status === "ready";
 			)}
 			{(account.signature || account.profileUrl) && (
 				<footer class="profile-game__footer">
-					{account.signature && <p class="profile-game__signature">{account.signature}</p>}
+					{account.signature && <p class="profile-game__signature" title={account.signature}>{account.signature}</p>}
 					{account.profileUrl && <a href={account.profileUrl} target="_blank" rel="noopener noreferrer" class="profile-game__provider">{account.source}<Icon icon="material-symbols:arrow-outward-rounded" width={16} height={16} /></a>}
 				</footer>
 			)}

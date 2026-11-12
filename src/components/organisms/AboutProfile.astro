@@ -58,7 +58,7 @@ const { profile, accounts = [] } = Astro.props;
                     {!!section.musicLinks?.length && <nav class="music-platforms" aria-label={section.title}>{section.musicLinks.map(link=>{
                         const platform=musicPlatform(link.href);return platform && <a class="music-platform m3-state-layer" href={link.href} target="_blank" rel="noopener noreferrer">{link.logo || platform.logo ? <img src={link.logo??platform.logo} alt="" width="24" height="24" loading="lazy" decoding="async" /> : platform.icon && <Icon icon={platform.icon} width={24} height={24}/>}<span>{link.label??platform.name}</span><Icon icon="material-symbols:arrow-outward-rounded" width={16} height={16}/></a>;
                     })}</nav>}
-                    {section.kind === "games" && !!accounts.length && <div class="profile-games">{accounts.map(account=><GameAccountCard {account} avatar={profile.avatar} />)}</div>}
+                    {section.kind === "games" && !!accounts.length && <div class="profile-games">{accounts.map(account=><GameAccountCard {account} />)}</div>}
 
                     {!!section.items?.length && <ul class:list={["section-items", `${section.kind}-items`]}>
                         {section.items.map(item => <li>

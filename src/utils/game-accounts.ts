@@ -38,30 +38,37 @@ export function normalizeGameAccount(
 ): GameAccount | null {
 	const root = object(value);
 	let info: Record<string, unknown>, signature: unknown, characters: unknown;
+	let avatarId: number | undefined;
 	if (root.uid !== undefined && String(root.uid) !== uid) return null;
 	if (game === "genshin") {
 		info = object(root.playerInfo);
 		signature = info.signature;
 		characters = info.showAvatarInfoList;
+		const picture = object(info.profilePicture);
+		avatarId = count(picture.id ?? picture.avatarId);
 	} else if (game === "starrail") {
 		info = object(root.detailInfo);
 		signature = info.signature;
 		characters = info.avatarDetailList;
+		avatarId = count(info.headIcon);
 	} else if (game === "zzz") {
 		const player = object(root.PlayerInfo),
 			social = object(player.SocialDetail);
 		info = object(social.ProfileDetail);
 		signature = social.Desc;
 		characters = object(player.ShowcaseDetail).AvatarList;
+		avatarId = count(info.ProfileId);
 	} else if (game === "endfield") {
 		const player = object(root.playerInfo);
 		info = object(player.businessCard);
 		signature = info.signature;
 		characters = player.charData;
+		avatarId = count(info.userAvatarId);
 	} else return null;
 	const nickname = text(info.nickname ?? info.Nickname ?? info.name, 100),
 		level = count(info.level ?? info.Level ?? info.adventureLevel);
 	if (!nickname || level === undefined) return null;
+	const shortId = game === "endfield" ? text(info.shortId, 12) : undefined;
 	const time = Date.now(),
 		ttl =
 			typeof root.ttl === "number"
@@ -71,7 +78,9 @@ export function normalizeGameAccount(
 		game,
 		uid,
 		status: "ready",
-		nickname,
+		nickname:
+			shortId && /^\d+$/.test(shortId) ? `${nickname}#${shortId}` : nickname,
+		avatarId,
 		level,
 		signature: text(signature),
 		worldLevel: count(info.worldLevel),
@@ -130,6 +139,11 @@ export function readGameAccountSnapshot(
 				...presentation,
 				status: "ready",
 				nickname,
+				avatarUrl:
+					typeof row.avatarUrl === "string" &&
+					/^https:\/\/enka\.network\/ui\/[\w/.-]+\.png$/.test(row.avatarUrl)
+						? row.avatarUrl
+						: undefined,
 				level,
 				signature: text(row.signature),
 				worldLevel: count(row.worldLevel),

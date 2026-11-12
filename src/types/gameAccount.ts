@@ -18,6 +18,8 @@ export interface GameAccount {
 	uid: string;
 	status: "ready" | "unavailable" | "unsupported";
 	nickname?: string;
+	avatarId?: number;
+	avatarUrl?: string;
 	signature?: string;
 	level?: number;
 	worldLevel?: number;

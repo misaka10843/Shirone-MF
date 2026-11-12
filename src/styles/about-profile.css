@@ -8,7 +8,7 @@
 	min-width: 0;
 }
 .about-profile .identity-copy {
-	padding: clamp(1.25rem, 3cqi, 2rem);
+	padding: clamp(var(--m3e-space-4), 3cqi, var(--m3e-space-6));
 }
 .about-profile .eyebrow {
 	display: flex;
@@ -20,7 +20,7 @@
 }
 .about-profile .identity-copy > .eyebrow {
 	color: var(--primary);
-	margin-bottom: 1.75rem;
+	margin-bottom: var(--m3e-space-4);
 }
 .about-profile .identity-dot {
 	width: .5rem;
@@ -33,7 +33,7 @@
 	height: 3.5rem;
 	border-radius: var(--shape-corner-l);
 	object-fit: cover;
-	margin-bottom: 1.25rem;
+	margin-bottom: var(--m3e-space-3);
 }
 .about-profile h1 {
 	font: var(--m3e-type-headline-medium);
@@ -75,7 +75,7 @@
 	display: flex;
 	flex-wrap: wrap;
 	gap: .5rem;
-	margin-top: 1.75rem;
+	margin-top: var(--m3e-space-4);
 }
 .about-profile .profile-link, .about-profile .section-link {
 	position: relative;
@@ -94,21 +94,21 @@
 }
 .about-profile .identity-art {
 	overflow: hidden;
-	min-height: 16rem;
+	min-height: 0;
 	background: var(--surface-container);
 }
 .about-profile .identity-art img {
 	width: 100%;
 	height: 100%;
-	max-height: 26rem;
+	max-height: 18rem;
 	object-fit: cover;
 	object-position: center 35%;
 }
 .about-profile .profile-grid {
 	display: grid;
 	grid-template-columns: minmax(0, 1fr);
-	gap: 1rem;
-	margin-top: 1rem;
+	gap: var(--m3e-space-3);
+	margin-top: var(--m3e-space-3);
 }
 .about-profile .profile-section {
 	min-width: 0;
@@ -130,7 +130,7 @@
 	height: 100%;
 }
 .about-profile .section-content {
-	padding: 1.5rem;
+	padding: clamp(var(--m3e-space-3), 2.8cqi, var(--m3e-space-5));
 	color: var(--profile-card-text);
 }
 .about-profile .section-content::after{content:"";display:block;clear:both}
@@ -290,7 +290,12 @@
 .about-profile .identity-layout {
 	grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
 }
+.about-profile .identity-art {
+	position: relative;
+}
 .about-profile .identity-art img {
+	position: absolute;
+	inset: 0;
 	max-height: none;
 }
 .about-profile .profile-grid {

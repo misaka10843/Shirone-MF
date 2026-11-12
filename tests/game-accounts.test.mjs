@@ -1,6 +1,16 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {gameAccountEndpoint,normalizeGameAccount,readGameAccountSnapshot} from "../src/utils/game-accounts.ts";
+
+test("Endfield preserves the provider's account tag and profile picture ID", () => {
+ const result = normalizeGameAccount("endfield", "123456789", {
+  playerInfo: {
+   businessCard: { name: "Doctor", shortId: "0042", adventureLevel: 60, userAvatarId: 37 },
+  },
+ });
+ assert.equal(result.nickname, "Doctor#0042");
+ assert.equal(result.avatarId, 37);
+});
 test("UID account providers normalize public profiles across four distinct game schemas",()=>{
  const cases=[
   ["genshin",{playerInfo:{nickname:"A",level:56,showAvatarInfoList:[{}],finishAchievementNum:540}}],
