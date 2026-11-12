@@ -42,7 +42,16 @@ const { profile, accounts = [] } = Astro.props;
     <div class="profile-grid">
         {profile.sections.map((section) => <section
             id={`about-${section.id}`}
-            class:list={["profile-section", `kind-${section.kind}`, `tone-${section.tone ?? "surface"}`, { "section-wide": section.wide }]}
+            class:list={[
+                "profile-section",
+                `kind-${section.kind}`,
+                `tone-${section.tone ?? "surface"}`,
+                {
+                    "section-wide": section.wide,
+                    "has-personality": section.personality,
+                    "has-music": section.musicLinks?.length,
+                },
+            ]}
             aria-labelledby={`about-heading-${section.id}`}
         >
             <Card radius="l" color="var(--profile-card-bg)" class="profile-section-card">
@@ -67,7 +76,7 @@ const { profile, accounts = [] } = Astro.props;
                                     <span class="poster-fallback" aria-hidden="true">{[...item.title].slice(0, 2).join("")}</span>
                                     {item.image && <img src={item.image} alt="" width="240" height="336" loading="lazy" decoding="async" />}
                                 </span>
-                                <span>{item.title}</span>
+                                <span class="poster-title">{item.title}</span>
                             </a> : <div class="item-row">
                                 {(item.logo || item.image) && <span class:list={["tool-image",{"team-logo":Boolean(item.logo)}]}>{item.logo && <Icon icon="material-symbols:groups-outline-rounded" width={28} height={28}/>}<img src={item.logo??item.image} alt="" width={item.logo?48:36} height={item.logo?48:36} loading="lazy" decoding="async" onerror="this.setAttribute('hidden','')" /></span>}
                                 <div class="item-copy">

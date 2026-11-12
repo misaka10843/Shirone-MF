@@ -129,6 +129,19 @@
 .about-profile .profile-section .profile-section-card {
 	height: 100%;
 }
+.about-profile .kind-quote,
+.about-profile .kind-posters {
+	--profile-card-bg: color-mix(in oklab, var(--primary-container) 24%, var(--card-bg));
+}
+.about-profile .has-personality,
+.about-profile .kind-games {
+	--profile-card-bg: var(--tertiary-container);
+	--profile-card-text: var(--on-tertiary-container);
+	--profile-card-muted: var(--on-tertiary-container);
+}
+.about-profile .has-music {
+	--profile-card-bg: color-mix(in oklab, var(--secondary-container) 22%, var(--card-bg));
+}
 .about-profile .section-content {
 	padding: clamp(var(--m3e-space-3), 2.8cqi, var(--m3e-space-5));
 	color: var(--profile-card-text);
@@ -144,11 +157,11 @@
 	display: flex;
 	align-items: center;
 	gap: .65rem;
-	color: var(--on-surface);
+	color: var(--profile-card-text);
 }
 .about-profile .section-eyebrow {
 	font: var(--m3e-type-body-small);
-	color: var(--on-surface-variant);
+	color: var(--profile-card-text);
 	margin: 0 0 .5rem;
 }
 .about-profile h2 {
@@ -277,6 +290,30 @@
 .about-profile .poster-link span {
 	display: block;
 }
+.about-profile .kind-posters:not(.section-wide) .posters-items {
+	grid-template-columns: minmax(0, 1fr);
+	gap: var(--m3e-space-2);
+}
+.about-profile .kind-posters:not(.section-wide) .poster-link {
+	display: grid;
+	grid-template-columns: 2.75rem minmax(0, 1fr);
+	align-items: center;
+	gap: var(--m3e-space-3);
+	padding: var(--m3e-space-1) var(--m3e-space-3) var(--m3e-space-1) var(--m3e-space-1);
+	border-radius: var(--shape-corner-m);
+	background: var(--surface-container-low);
+}
+.about-profile .kind-posters:not(.section-wide) .poster-art {
+	margin: 0;
+	aspect-ratio: 4 / 5;
+	border-radius: var(--shape-corner-s);
+}
+.about-profile .kind-posters:not(.section-wide) .poster-fallback {
+	font: var(--m3e-type-label-large);
+}
+.about-profile .poster-title {
+	overflow-wrap: anywhere;
+}
 .about-profile .section-link {
 	margin-top: 1.5rem;
 	background: var(--surface-container-lowest);
@@ -318,10 +355,28 @@
 }
 }
 @media (prefers-reduced-motion: no-preference) {
-.about-profile .poster-link img {
-	transition: transform var(--m3e-duration-medium) var(--m3e-easing-standard);
-}
-.about-profile .poster-link:hover img {
-	transform: translateY(-.2rem);
-}
+	.about-profile :is(.identity-art img, .section-image, .profile-game__artwork) {
+		transition: transform var(--m3e-duration-long) var(--m3e-easing-emphasized);
+	}
+	.about-profile .identity-layout:hover .identity-art img,
+	.about-profile .profile-section:hover .section-image,
+	.about-profile .profile-game:is(:hover, :focus-within) .profile-game__artwork {
+		transform: scale(1.045);
+	}
+	.about-profile :is(.poster-art, .personality-avatar, .music-platform > :is(svg, img):first-child, .tool-image, .team-logo) {
+		transition: transform var(--m3e-duration-medium) var(--m3e-easing-emphasized);
+	}
+	.about-profile .poster-link:is(:hover, :focus-visible) .poster-art {
+		transform: rotate(-4deg) scale(1.05);
+	}
+	.about-profile .has-personality:hover .personality-avatar {
+		transform: translateY(-.25rem) rotate(2deg);
+	}
+	.about-profile .music-platform:is(:hover, :focus-visible) > :is(svg, img):first-child {
+		transform: rotate(-12deg);
+	}
+	.about-profile .section-items li:hover .tool-image,
+	.about-profile .section-items li:focus-within .team-logo {
+		transform: translateY(-.2rem);
+	}
 }
