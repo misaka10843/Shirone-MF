@@ -2,14 +2,14 @@
 /**
  * 分类导航栏（全站复用）。
  * 外层 Card 原子容器 + 内层 flex：Home / Archive / 各分类 pill，
- * 分类区横向滚动。当前页 primary 实底强高亮；文章页所属分类 primary-container
+ * 分类区自动换行。当前页 primary 实底强高亮；文章页所属分类 primary-container
  * 弱高亮（M3 次级语义）。query 分类筛选由客户端 JS 在加载 + swup 导航时更新。
  */
 import Chip from "@components/atoms/action/Chip.astro";
 import Card from "@components/atoms/display/Card.svelte";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
-import Icon from "@iconify/svelte";
+import Icon from "@components/atoms/display/Icon.svelte";
 import { getCategoryList } from "@utils/content-utils";
 import { pathsEqual, url } from "@utils/url-utils";
 
@@ -45,7 +45,7 @@ const softCategory = !isHome && !isArchive && postCategory ? postCategory : "";
 	class:list={{ hidden: Astro.url.pathname.startsWith("/categories") || Astro.url.pathname.startsWith("/tags") }}
 >
 	<Card color="var(--card-bg)" radius="l" class="category-bar onload-animation mb-4 p-2" id="category-bar">
-		<div class="category-bar-inner flex gap-2 items-center">
+		<div class="category-bar-inner flex flex-wrap gap-2 items-center">
 			<Chip
 				variant="tonal"
 				href={homeUrl}
@@ -64,27 +64,30 @@ const softCategory = !isHome && !isArchive && postCategory ? postCategory : "";
 				{i18n(I18nKey.archive)}
 			</Chip>
 
-			<!-- 分类区：横向滚动 -->
-			<div class="category-bar-list flex gap-2 overflow-x-auto hide-scrollbar flex-1 min-w-0">
 				{categories.map((cat) => (
 					<Chip
 						variant="tonal"
 						href={cat.url}
 						selected={false}
 						soft={cat.name === softCategory}
-						class="shrink-0"
+						class="category-bar-chip max-w-full"
 					>
-						{cat.name}
+						<span class="min-w-0 wrap-anywhere whitespace-normal">{cat.name}</span>
 						<span class="category-bar__count" aria-hidden="true">{cat.count}</span>
 					</Chip>
 				))}
-			</div>
 		</div>
 	</Card>
 </nav>
 
 <style lang="stylus">
+	:global(.category-bar-chip.m3-chip)
+		height: auto
+		min-height: 2rem
+		padding-block: var(--m3e-space-1)
+
 	.category-bar__count
+		flex-shrink: 0
 		font-size: 0.7rem
 		font-weight: 600
 		padding: 0.05rem 0.35rem
