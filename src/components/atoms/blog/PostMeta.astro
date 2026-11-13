@@ -18,7 +18,7 @@ interface Props {
 	class?: string;
 	/** 发布日期（展示文本，如 "2026-08-13"） */
 	published?: string;
-	/** 更新日期（与 published 不同才渲染） */
+	/** 更新日期（由调用方决定是否传入） */
 	updated?: string;
 	category?: BlogMetaLink | null;
 	tags?: BlogMetaLink[];
@@ -56,10 +56,10 @@ const {
 		</span>
 	)}
 
-	{!hideUpdate && updated && updated !== published && (
+	{!hideUpdate && updated && (
 		<span class="m3-blog-postmeta__item">
 			<MetaIcon icon="material-symbols:edit-calendar-outline-rounded" />
-			<span class="m3-blog-postmeta__text">{updated}</span>
+			<span class="m3-blog-postmeta__text">{i18n(I18nKey.updatedOn)} <time datetime={updated}>{updated}</time></span>
 		</span>
 	)}
 

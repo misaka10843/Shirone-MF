@@ -13,6 +13,8 @@ interface Props {
 	class?: string;
 	published: Date;
 	updated?: Date;
+	publishedAt?: Date;
+	updatedAt?: Date;
 	tags: string[];
 	category: string | null;
 	hideUpdateDate?: boolean;
@@ -21,6 +23,8 @@ const {
 	class: className,
 	published,
 	updated,
+	publishedAt,
+	updatedAt,
 	tags,
 	category,
 	hideUpdateDate = false,
@@ -30,12 +34,16 @@ const categoryLink = category
 	? { name: category, href: getCategoryUrl(category) }
 	: null;
 const tagLinks = tags.map((t) => ({ name: t.trim(), href: getTagUrl(t) }));
+const hasUpdate = updated && (
+	updated.getTime() !== published.getTime() ||
+	(updatedAt && updatedAt.getTime() > (publishedAt ?? published).getTime())
+);
 ---
 
 <PostMeta
 	class={className}
 	published={formatDateToYYYYMMDD(published)}
-	updated={updated ? formatDateToYYYYMMDD(updated) : undefined}
+	updated={hasUpdate ? formatDateToYYYYMMDD(updated) : undefined}
 	category={categoryLink}
 	tags={tagLinks}
 	hideUpdate={hideUpdateDate}
