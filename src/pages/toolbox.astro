@@ -1,0 +1,52 @@
+---
+import Card from "@components/atoms/display/Card.svelte";
+import Icon from "@components/atoms/display/Icon.svelte";
+import PageHeader from "@components/atoms/display/PageHeader.astro";
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+import { url } from "@utils/url-utils";
+import { blogExtras, loadGistCards, type ToolboxCard } from "@utils/blog-extras";
+
+const gistUser = blogExtras.gistUser;
+const tools = (blogExtras.tools ?? []).filter(({ href }) => /^https:\/\/|^\/(?![\/\\])/.test(href));
+if (!tools.length && !gistUser) return Astro.redirect(url("/404/"));
+
+const cards: { entry: ToolboxCard; gist: boolean }[] = [
+	...tools.map((entry) => ({ entry, gist: false })),
+	...(gistUser ? (await loadGistCards())
+		.filter(({ href }) => href.startsWith("https://gist.github.com/"))
+		.map((entry) => ({ entry, gist: true })) : []),
+];
+const title = i18n(I18nKey.toolbox);
+---
+
+<MainGridLayout title={title}>
+	<Card color="var(--card-bg)" radius="l" class="p-6">
+		<div class="mb-5 flex flex-wrap items-center justify-between gap-4">
+			<PageHeader title={title} />
+			{gistUser && (
+				<a class="inline-flex min-h-11 items-center gap-2 text-[var(--primary)] underline" href={`https://gist.github.com/${encodeURIComponent(gistUser)}`}>
+					<Icon icon="simple-icons:github" width={20} height={20} aria-hidden="true" />
+					{i18n(I18nKey.gistProfile)}
+				</a>
+			)}
+		</div>
+		<ul class="m-0 grid list-none grid-cols-[repeat(auto-fit,minmax(min(100%,16rem),1fr))] gap-3 p-0">
+			{cards.map(({ entry, gist }) => (
+				<li>
+					<a href={entry.href.startsWith("/") ? url(entry.href) : entry.href}
+						class="m3-state-layer relative flex h-full min-w-0 flex-col gap-2 rounded-[var(--shape-corner-l)] bg-[var(--surface-container)] p-4 text-[var(--on-surface)] wrap-anywhere">
+						<span class="flex items-start gap-2 font-semibold">
+							<Icon icon={gist ? "simple-icons:github" : "material-symbols:construction-rounded"} width={20} height={20} class="shrink-0" aria-hidden="true" />
+							{entry.title}
+							<Icon icon="material-symbols:arrow-outward-rounded" width={18} height={18} class="ml-auto shrink-0" aria-hidden="true" />
+						</span>
+						{entry.description && <span class="text-[var(--on-surface-variant)]">{entry.description}</span>}
+						{!!entry.tags?.length && <span class="text-sm text-[var(--on-surface-variant)]">{entry.tags.join(" · ")}</span>}
+					</a>
+				</li>
+			))}
+		</ul>
+	</Card>
+</MainGridLayout>

@@ -84,6 +84,7 @@ artifacts/shirone-ai-*
 /src/data/*.ts
 /src/data/game-snapshots/
 /src/data/game-account-snapshots.json
+/src/data/toolbox-gists.json
 /src/user/user-config.ts
 /src/assets/fonts/personal/
 /public/assets/image/
