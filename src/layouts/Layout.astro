@@ -4,6 +4,7 @@ import Snackbar from "@components/atoms/overlay/Snackbar.svelte";
 import ConfigCarrier from "@components/system/ConfigCarrier.astro";
 import UmamiRuntime from "@components/system/UmamiRuntime.astro";
 import { resolveAsset } from "@utils/asset-utils";
+import { blogExtras } from "@utils/blog-extras";
 import { createDefaultSchemeStyle } from "@utils/theme-utils";
 import { pathsEqual, toAbsoluteUrl, url } from "@utils/url-utils";
 import {
@@ -234,6 +235,17 @@ const defaultSchemeStyle = createDefaultSchemeStyle();
 	>
 		<ConfigCarrier></ConfigCarrier>
 		{umamiOptions && <UmamiRuntime />}
+		{blogExtras.randomExplore && (
+			<script is:inline>
+				document.addEventListener("click", (event) => {
+					const link = event.target instanceof Element && event.target.closest("a[data-random-explore]");
+					if (!link) return;
+					const choices = JSON.parse(link.dataset.randomExplore);
+					const href = choices[Math.floor(Math.random() * choices.length)];
+					if (href) link.href = href;
+				}, true);
+			</script>
+		)}
 		{textureEnabled && (
 			<div
 				id="m3e-texture-canvas"

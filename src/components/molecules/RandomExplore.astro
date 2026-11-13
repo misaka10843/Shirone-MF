@@ -1,0 +1,23 @@
+---
+import Icon from "@components/atoms/display/Icon.svelte";
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+
+interface Props {
+	links: string[];
+}
+
+const { links } = Astro.props;
+---
+
+{links.length > 0 && (
+	<a
+		data-no-swup
+		data-random-explore={JSON.stringify(links)}
+		href={links[0]}
+		class="m3-state-layer relative inline-flex min-h-11 items-center gap-2 rounded-[var(--shape-corner-m)] bg-[var(--secondary-container)] px-4 text-[var(--on-secondary-container)]"
+	>
+		<Icon icon="material-symbols:shuffle-rounded" width={20} height={20} aria-hidden="true" />
+		{i18n(I18nKey.randomExplore)}
+	</a>
+)}

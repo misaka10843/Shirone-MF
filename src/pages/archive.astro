@@ -1,15 +1,22 @@
 ---
 import ArchivePanel from "@components/organisms/ArchivePanel.svelte";
+import RandomExplore from "@components/molecules/RandomExplore.astro";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
-import { getSortedPostsList } from "../utils/content-utils";
+import { blogExtras } from "@utils/blog-extras";
+import { getSortedPosts, getSortedPostsList } from "../utils/content-utils";
+import { getPostUrl } from "@utils/url-utils";
 
 const sortedPostsList = await getSortedPostsList();
 const archiveSummary = `${sortedPostsList.length} ${i18n(I18nKey.postsCount)}`;
+const randomLinks = blogExtras.randomExplore
+	? (await getSortedPosts()).filter(({ data }) => !data.encrypted && !data.draft).map(getPostUrl)
+	: [];
 ---
 
 <MainGridLayout title={i18n(I18nKey.archive)} description={archiveSummary} page="archive">
+    {!!randomLinks.length && <div class="mb-3"><RandomExplore links={randomLinks} /></div>}
     <ArchivePanel sortedPosts={sortedPostsList} client:visible></ArchivePanel>
 </MainGridLayout>
 

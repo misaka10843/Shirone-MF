@@ -1,8 +1,20 @@
 ---
 import Pagination from "@components/molecules/Pagination.astro";
+import Card from "@components/atoms/display/Card.svelte";
+import Icon from "@components/atoms/display/Icon.svelte";
+import RandomExplore from "@components/molecules/RandomExplore.astro";
 import PostPage from "@components/organisms/PostPage.astro";
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+import { getPublishedInstant } from "@utils/content-date";
+import { formatDateToYYYYMMDD } from "@utils/date-utils";
+import { getPostUrl, url } from "@utils/url-utils";
 import type { GetStaticPaths } from "astro";
+import { getCollection } from "astro:content";
+import { momentsConfig } from "@/config/momentsConfig";
 import { postListConfig } from "@/config/postListConfig";
+import { projectsConfig } from "@/config/projectsConfig";
+import { blogExtras } from "@utils/blog-extras";
 import MainGridLayout from "../layouts/MainGridLayout.astro";
 import { getSortedPosts } from "../utils/content-utils";
 
@@ -15,9 +27,65 @@ export const getStaticPaths = (async ({ paginate }) => {
 const { page } = Astro.props;
 
 const len = page.data.length;
+const isFirstPage = page.currentPage === 1;
+const publicPosts = isFirstPage && (blogExtras.homeActivity || blogExtras.randomExplore)
+	? (await getSortedPosts()).filter(({ data }) => !data.encrypted && !data.draft)
+	: [];
+const randomLinks = blogExtras.randomExplore ? publicPosts.map(getPostUrl) : [];
+const activity = [];
+
+if (isFirstPage && blogExtras.homeActivity) {
+	const latest = publicPosts.toSorted((a, b) => getPublishedInstant(b.data).getTime() - getPublishedInstant(a.data).getTime())[0];
+	if (latest) activity.push({
+		label: i18n(I18nKey.recentPosts),
+		title: latest.data.title,
+		href: getPostUrl(latest),
+		icon: "material-symbols:article-outline-rounded",
+	});
+	if (momentsConfig.enable) {
+		const moments = await getCollection("moments", ({ data }) => !data.draft);
+		const moment = moments.toSorted((a, b) => getPublishedInstant(b.data).getTime() - getPublishedInstant(a.data).getTime())[0];
+		if (moment) activity.push({
+			label: i18n(I18nKey.moments),
+			title: moment.data.tags.join(" · ") || formatDateToYYYYMMDD(moment.data.published),
+			href: url("/moments/"),
+			icon: "material-symbols:chat-bubble-outline-rounded",
+		});
+	}
+	if (projectsConfig.enable) {
+		const { resolveProjectsData } = await import("@utils/feature-data");
+		const projects = resolveProjectsData(projectsConfig);
+		const project = projects.find(({ featured }) => featured) ?? projects[0];
+		if (project) activity.push({
+			label: i18n(I18nKey.projects),
+			title: project.title,
+			href: url(project.details ? `/projects/${project.key}/` : "/projects/"),
+			icon: "material-symbols:rocket-launch-outline-rounded",
+		});
+	}
+}
 ---
 
 <MainGridLayout page="home">
+    {(activity.length > 0 || randomLinks.length > 0) && (
+        <Card color="var(--card-bg)" radius="l" class="mb-4 p-4 sm:p-5">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                {activity.length > 0 && <h2 class="[font:var(--m3e-type-title-large)]">{i18n(I18nKey.recentActivity)}</h2>}
+                <RandomExplore links={randomLinks} />
+            </div>
+            {activity.length > 0 && <ul class="mt-3 grid list-none grid-cols-[repeat(auto-fit,minmax(min(100%,10rem),1fr))] gap-2 p-0">
+                {activity.map((item) => <li class="min-w-0">
+                    <a href={item.href} class="m3-state-layer relative flex h-full items-start gap-2 rounded-[var(--shape-corner-m)] bg-[var(--surface-container)] p-3 text-[var(--on-surface)]">
+                        <Icon icon={item.icon} width={20} height={20} class="mt-1 shrink-0 text-[var(--primary)]" aria-hidden="true" />
+                        <span class="min-w-0 wrap-anywhere">
+                            <span class="block text-xs text-[var(--on-surface-variant)]">{item.label}</span>
+                            <span class="font-medium">{item.title}</span>
+                        </span>
+                    </a>
+                </li>)}
+            </ul>}
+        </Card>
+    )}
     <PostPage page={page}></PostPage>
     <Pagination class="mx-auto onload-animation" page={page} style={`animation-delay: calc(var(--content-delay) + ${(len)*50}ms)`}></Pagination>
 </MainGridLayout>
