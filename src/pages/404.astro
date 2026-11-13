@@ -1,12 +1,20 @@
 ---
 import Button from "@components/atoms/action/Button.svelte";
 import Card from "@components/atoms/display/Card.svelte";
+import Icon from "@components/atoms/display/Icon.svelte";
 import PageHeader from "@components/atoms/display/PageHeader.astro";
+import RandomExplore from "@components/molecules/RandomExplore.astro";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
-import Icon from "@iconify/svelte";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
-import { url } from "@utils/url-utils";
+import { getSortedPosts } from "@utils/content-utils";
+import { getPostUrl, url } from "@utils/url-utils";
+import { blogExtras } from "@utils/blog-extras";
+
+const art = blogExtras.notFoundArt;
+const links = art && blogExtras.randomExplore
+	? (await getSortedPosts()).filter(({ data }) => !data.encrypted && !data.draft).map(getPostUrl)
+	: [];
 ---
 
 <MainGridLayout
@@ -21,15 +29,18 @@ import { url } from "@utils/url-utils";
 		</div>
 
 		<div class="relative z-10 flex flex-col items-center text-center">
+			{art ? <img src={url(art)} width="320" height="320" alt="" class="mascot-art mb-4 h-auto w-40 sm:w-52" decoding="async" /> : (
 			<div class="not-found-badge mb-6" aria-hidden="true">
 				<Icon icon="material-symbols:sentiment-very-dissatisfied-rounded" class="text-4xl text-[var(--primary)]" />
 			</div>
+			)}
 
 			<PageHeader
 				title={i18n(I18nKey.notFoundTitle)}
 				subtitle={i18n(I18nKey.notFoundDescription)}
 				class="text-center mb-8 max-w-xl mx-auto"
 			/>
+			{art && <p class="mb-4 rounded-[var(--shape-corner-l)] bg-[var(--tertiary-container)] px-4 py-2 text-[var(--on-tertiary-container)]">{i18n(I18nKey.mascotHint)}</p>}
 
 			<div class="flex flex-wrap justify-center items-center gap-3">
 				<Button href={url("/")} variant="filled" size="small" ariaLabel={i18n(I18nKey.backToHome)}>
@@ -38,6 +49,7 @@ import { url } from "@utils/url-utils";
 						<span>{i18n(I18nKey.backToHome)}</span>
 					</span>
 				</Button>
+				<RandomExplore {links} />
 
 				<Button href={url("/archive/")} variant="tonal" size="small" ariaLabel={i18n(I18nKey.archive)}>
 					<span class="inline-flex items-center gap-2">
@@ -51,6 +63,12 @@ import { url } from "@utils/url-utils";
 </MainGridLayout>
 
 <style lang="stylus">
+@media (prefers-reduced-motion: no-preference)
+	.mascot-art
+		transition: transform var(--m3e-duration-medium2) var(--m3e-easing-standard)
+		&:hover
+			transform: rotate(-4deg) translateY(-0.25rem)
+
 .not-found-card
 	position: relative
 	min-height: clamp(22rem, 50vh, 36rem)
