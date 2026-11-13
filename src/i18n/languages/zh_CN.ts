@@ -3,6 +3,12 @@ import type { Translation } from "../translation.ts";
 
 export const zh_CN: Translation = {
 	[Key.postAiGenerated]: "AI 生成",
+	[Key.toolbox]: "折腾工具箱",
+	[Key.recentActivity]: "最近在忙什么",
+	[Key.randomExplore]: "随机逛逛",
+	[Key.gistProfile]: "GitHub Gist",
+	[Key.mascotHint]: "迷路了吗？我可以带你去看另一篇故事。",
+	[Key.updatedOn]: "最后更新",
 	[Key.postAiAssisted]: "AI 辅助写作",
 	[Key.gameAccountGenshin]: "原神",
 	[Key.gameStatLevel]: "等级",

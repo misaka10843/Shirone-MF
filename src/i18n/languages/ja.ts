@@ -3,6 +3,12 @@ import type { Translation } from "../translation.ts";
 
 export const ja: Translation = {
 	[Key.postAiGenerated]: "AI生成",
+	[Key.toolbox]: "ツールボックス",
+	[Key.recentActivity]: "最近の活動",
+	[Key.randomExplore]: "おまかせで読む",
+	[Key.gistProfile]: "GitHub Gist",
+	[Key.mascotHint]: "迷子？ 別のお話を探すのを手伝うよ。",
+	[Key.updatedOn]: "最終更新",
 	[Key.postAiAssisted]: "AIによる執筆支援",
 	[Key.gameAccountGenshin]: "原神",
 	[Key.gameStatLevel]: "レベル",

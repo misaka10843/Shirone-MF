@@ -3,6 +3,13 @@ import type { Translation } from "../translation.ts";
 
 export const tr: Translation = {
 	[Key.postAiGenerated]: "YZ ile üretildi",
+	[Key.toolbox]: "Araç kutusu",
+	[Key.recentActivity]: "Son etkinlikler",
+	[Key.randomExplore]: "Beni şaşırt",
+	[Key.gistProfile]: "GitHub Gist’leri",
+	[Key.mascotHint]:
+		"Yolunu mu kaybettin? Başka bir hikâye bulmana yardım edebilirim.",
+	[Key.updatedOn]: "Son güncelleme",
 	[Key.postAiAssisted]: "YZ destekli yazım",
 	[Key.gameAccountGenshin]: "Genshin Impact",
 	[Key.gameStatLevel]: "Seviye",

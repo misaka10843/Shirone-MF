@@ -3,6 +3,12 @@ import type { Translation } from "../translation.ts";
 
 export const th: Translation = {
 	[Key.postAiGenerated]: "สร้างโดย AI",
+	[Key.toolbox]: "กล่องเครื่องมือ",
+	[Key.recentActivity]: "กิจกรรมล่าสุด",
+	[Key.randomExplore]: "สุ่มบทความ",
+	[Key.gistProfile]: "GitHub Gist",
+	[Key.mascotHint]: "หลงทางเหรอ? ให้ฉันช่วยหาเรื่องอื่นให้อ่านนะ",
+	[Key.updatedOn]: "อัปเดตล่าสุด",
 	[Key.postAiAssisted]: "เขียนโดยมี AI ช่วย",
 	[Key.gameAccountGenshin]: "Genshin Impact",
 	[Key.gameStatLevel]: "เลเวล",

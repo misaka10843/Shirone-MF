@@ -3,6 +3,13 @@ import type { Translation } from "../translation.ts";
 
 export const vi: Translation = {
 	[Key.postAiGenerated]: "Do AI tạo",
+	[Key.toolbox]: "Hộp công cụ",
+	[Key.recentActivity]: "Hoạt động gần đây",
+	[Key.randomExplore]: "Đọc ngẫu nhiên",
+	[Key.gistProfile]: "Gist trên GitHub",
+	[Key.mascotHint]:
+		"Bạn lạc đường à? Mình có thể giúp bạn tìm một câu chuyện khác.",
+	[Key.updatedOn]: "Cập nhật lần cuối",
 	[Key.postAiAssisted]: "Viết với sự hỗ trợ của AI",
 	[Key.gameAccountGenshin]: "Genshin Impact",
 	[Key.gameStatLevel]: "Cấp",

@@ -3,6 +3,12 @@ import type { Translation } from "../translation.ts";
 
 export const en: Translation = {
 	[Key.postAiGenerated]: "AI-generated",
+	[Key.toolbox]: "Toolbox",
+	[Key.recentActivity]: "Recent activity",
+	[Key.randomExplore]: "Surprise me",
+	[Key.gistProfile]: "GitHub Gists",
+	[Key.mascotHint]: "Lost? I can help you find another story.",
+	[Key.updatedOn]: "Last updated",
 	[Key.postAiAssisted]: "AI-assisted writing",
 	[Key.gameAccountGenshin]: "Genshin Impact",
 	[Key.gameStatLevel]: "Level",

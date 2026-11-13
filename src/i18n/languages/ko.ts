@@ -3,6 +3,12 @@ import type { Translation } from "../translation.ts";
 
 export const ko: Translation = {
 	[Key.postAiGenerated]: "AI 생성",
+	[Key.toolbox]: "도구 상자",
+	[Key.recentActivity]: "최근 활동",
+	[Key.randomExplore]: "무작위로 읽기",
+	[Key.gistProfile]: "GitHub Gist",
+	[Key.mascotHint]: "길을 잃었나요? 다른 이야기를 찾도록 도와줄게요.",
+	[Key.updatedOn]: "마지막 업데이트",
 	[Key.postAiAssisted]: "AI 보조 작성",
 	[Key.gameAccountGenshin]: "원신",
 	[Key.gameStatLevel]: "레벨",

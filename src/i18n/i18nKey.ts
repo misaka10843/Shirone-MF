@@ -308,6 +308,12 @@ enum I18nKey {
 	relatedReading = "relatedReading",
 	relatedReadingSubtitle = "relatedReadingSubtitle",
 	randomReading = "randomReading",
+	toolbox = "toolbox",
+	recentActivity = "recentActivity",
+	randomExplore = "randomExplore",
+	gistProfile = "gistProfile",
+	mascotHint = "mascotHint",
+	updatedOn = "updatedOn",
 	randomReadingSubtitle = "randomReadingSubtitle",
 
 	friendApplicationCopy = "friendApplicationCopy",
