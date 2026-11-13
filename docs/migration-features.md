@@ -155,3 +155,17 @@ ai:
 ```
 
 Use `generated` for AI-generated articles and `assisted` for AI-assisted writing. Supply at least one model. Recognized providers use brand icons and other providers use a generic model icon.
+
+## Toolbox and homepage extras
+
+Set `homeActivity`, `randomExplore`, or `notFoundArt` in the content repository's `data/blog-extras.ts` to enable the homepage summary, random public-article links, or the 404 illustration. Put the illustration under the content repository's `public/images/`.
+
+The toolbox at `/toolbox/` reads custom cards from `blogExtras.tools`. Each card has a `title` and `href`, with optional `description` and `tags`. Add the route to your navigation when configuring the toolbox.
+
+Set `gistUser` and run the following from the theme repository to update the public Gist cards in the content repository.
+
+```powershell
+node scripts/sync-toolbox-gists.mjs misaka10843 ../blog-content/data/toolbox-gists.json
+```
+
+Commit the updated snapshot in the content repository to publish the changes. The site reads the saved cards at build time.
